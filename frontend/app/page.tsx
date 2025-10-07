@@ -1,103 +1,126 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  UserCog,
+  Users,
+  BookUser,
+  User,
+  GraduationCap,
+  HeartHandshake,
+  Home as HomeIcon,
+  Building,
+  Archive,
+} from "lucide-react";
+
+const roles = [
+  {
+    title: "Headmaster",
+    href: "/headmaster/dashboard",
+    description: "Manage school operations and oversee academic activities.",
+    icon: "UserCog",
+  },
+  {
+    title: "Head of Department (HOD)",
+    href: "/hod/dashboard",
+    description: "Oversee a department's academic activities and staff.",
+    icon: "Users",
+  },
+  {
+    title: "Headmaster Academics",
+    href: "/headmaster-academics/dashboard",
+    description: "Manage academic curriculum and student performance.",
+    icon: "BookUser",
+  },
+  {
+    title: "Teacher",
+    href: "/teacher/dashboard",
+    description: "Access class schedules, student information, and manage assignments.",
+    icon: "User",
+  },
+  {
+    title: "Students",
+    href: "/student/dashboard",
+    description: "View your courses, grades, and school announcements.",
+    icon: "GraduationCap",
+  },
+  {
+    title: "Parents",
+    href: "/parent/dashboard",
+    description: "Monitor your child's academic progress and communicate with teachers.",
+    icon: "HeartHandshake",
+  },
+  {
+    title: "Senior House Master",
+    href: "/senior-house-master/dashboard",
+    description: "Manage student housing and related activities.",
+    icon: "Home",
+  },
+  {
+    title: "Housemaster",
+    href: "/housemaster/dashboard",
+    description: "Oversee a specific student house and its residents.",
+    icon: "Building",
+  },
+  {
+    title: "Inventory (Store)",
+    href: "/inventory/dashboard",
+    description: "Manage school supplies and inventory.",
+    icon: "Archive",
+  },
+];
+
+const iconMap: { [key: string]: React.ElementType } = {
+  UserCog,
+  Users,
+  BookUser,
+  User,
+  GraduationCap,
+  HeartHandshake,
+  Home: HomeIcon,
+  Building,
+  Archive,
+};
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      {/* Gradient background */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-green-400 via-blue-200 to-yellow-100 animate-gradient-x" />
+      {/* Glassmorphism card container */}
+      <div className="relative z-10 w-full max-w-7xl px-4 py-12 flex flex-col items-center">
+        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 text-center mb-3 drop-shadow-lg tracking-tight">
+          Nolex <span className="text-green-600">SMS</span> for <span className="text-yellow-600">SHS</span>
+        </h1>
+        <p className="text-xl md:text-2xl text-gray-700 mb-12 font-medium text-center max-w-2xl drop-shadow-sm">
+          Your complete school management solution.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 w-full">
+          {roles.map((role) => {
+            const Icon = iconMap[role.icon];
+            return (
+              <Link
+                key={role.href}
+                href={role.href}
+                className="group relative p-7 rounded-2xl shadow-2xl bg-white/60 backdrop-blur-md border border-white/40 hover:bg-white/80 transition-all duration-300 ease-in-out flex flex-col items-center text-center hover:scale-[1.04] hover:shadow-yellow-200/60"
+                style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
+              >
+                <div className="p-3 bg-gradient-to-tr from-green-200 via-yellow-100 to-white rounded-full mb-3 border-2 border-green-400 group-hover:border-yellow-400 transition-colors shadow-md">
+                  <Icon className="w-10 h-10 text-green-600 group-hover:text-yellow-500 transition-colors" />
+                </div>
+                <h2 className="text-lg md:text-xl font-bold mb-2 text-gray-900 group-hover:text-yellow-500 transition-colors">
+                  {role.title}
+                </h2>
+                <p className="text-sm md:text-base text-gray-700 group-hover:text-green-700 transition-colors">
+                  {role.description}
+                </p>
+                <span className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 text-xs text-yellow-500 font-semibold transition-opacity">Go &rarr;</span>
+              </Link>
+            );
+          })}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+      {/* Decorative blurred circles */}
+      <div className="absolute -top-24 -left-24 w-72 h-72 bg-green-300 rounded-full filter blur-3xl opacity-30 z-0" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-yellow-200 rounded-full filter blur-2xl opacity-40 z-0" />
     </div>
   );
 }
