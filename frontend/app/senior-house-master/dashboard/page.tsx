@@ -1,3 +1,5 @@
-export default function SeniorHouseMasterDashboard() {
-  return <div>Senior House Master Dashboard</div>;
+import Dashboard from "../../../components/SeniorHouseMaster/dashboard/Dashboard";
+
+export default function Home() {
+  return <Dashboard />;
 }
