@@ -20,7 +20,7 @@ const roles = [
   },
   {
     title: "Head of Department (HOD)",
-    href: "/hod/dashboard",
+    href: "/hod/main/dashboard",
     description: "Oversee a department's academic activities and staff.",
     icon: "Users",
   },
