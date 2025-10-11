@@ -52,8 +52,8 @@ const HODAnalyticsChart = () => {
             <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="current" fill="#eab308" name="Current Term" />
-            <Bar dataKey="previous" fill="#16a34a" name="Previous Term" />
+            <Bar dataKey="current" fill="#eab308" name="Pass Rate" />
+            <Bar dataKey="previous" fill="#16a34a" name="Average Score" />
           </BarChart>
         </div>
 

@@ -14,7 +14,10 @@ export default function HodDashboard() {
         <Sidebar />
       </div>
       <div className="flex-1 flex flex-col">
-        <Header />
+        <Header 
+          title="Department Overview" 
+          subtitle="Welcome back, Dr. Kwame Mensah" 
+        />
         <main className="flex-1 p-6 md:p-8 space-y-6">
           <HODDashboardStat />
           <HODAnalyticsChart />
