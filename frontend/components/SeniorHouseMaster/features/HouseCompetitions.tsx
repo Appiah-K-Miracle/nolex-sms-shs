@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Trophy, ArrowLeft, Calendar, Tag, FileText } from "lucide-react";
+import { Plus, Trophy, ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -58,7 +58,7 @@ const HouseCompetitions: React.FC = () => {
       event: "Sanitation Week",
       date: "2025-01-20",
       category: "Culture",
-      status: "Upcoming",
+      status: "Ongoing",
     },
   ];
 
@@ -81,7 +81,7 @@ const HouseCompetitions: React.FC = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowForm(false)}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+            className="flex items-center gap-2 p-2 rounded text-gray-600 hover:bg-amber-500 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             Back
@@ -218,29 +218,29 @@ const HouseCompetitions: React.FC = () => {
     );
   }
 
-  // Show main competitions view
   return (
     <div className="space-y-6">
-      <div className="space-y-6 ">
-        <div>
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">
-                House Competitions
-              </h1>
-              <p>Track inter-house competitions and rankings</p>
-            </div>
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-green-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-800 transition-colors"
-            >
-              {<Plus className="w-4 h-4 inline-block mr-2" />}
-              Add Competition
-            </button>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">
+              House Competitions
+            </h1>
+            <p>Track inter-house competitions and rankings</p>
           </div>
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-green-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-800 transition-colors"
+          >
+            {<Plus className="w-4 h-4 inline-block mx-2" />}
+            Add Competition
+          </button>
+        </div>
 
-          {/* House Leaderboard */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mt-8">
+        {/* Cards Container - Flex on large screens */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* House Leaderboard Card */}
+          <div className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-800">
                 Overall Leaderboard
@@ -277,11 +277,9 @@ const HouseCompetitions: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Upcoming Events */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          {/* Upcoming Events Card */}
+          <div className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-800">
                 Upcoming Competitions
