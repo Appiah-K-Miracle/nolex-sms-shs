@@ -30,6 +30,7 @@ const HeadmasterDashboard = () => {
         </main>
       </div>
     </div>
+
   );
 };
 
