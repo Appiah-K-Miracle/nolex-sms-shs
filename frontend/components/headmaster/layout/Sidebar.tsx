@@ -59,6 +59,11 @@ const navigation: NavGroup[] = [
         icon: GraduationCap,
       },
       {
+        title: "Admissions",
+        href: "/headmaster/academics/admissions",
+        icon: GraduationCap,
+      },
+      {
         title: "Teachers",
         href: "/headmaster/academics/teachers",
         icon: Users,
