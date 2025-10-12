@@ -5,69 +5,7 @@ import Header from '@/components/hod/layout/Header';
 import { useState } from 'react';
 import { Eye, Edit, Trash2, Users, UserCheck } from 'lucide-react';
 import Link from 'next/link';
-
-const subjects = [
-  {
-    id: 1,
-    name: "Physics",
-    code: "PHY101",
-    type: "Core",
-    teachers: 4,
-    students: 156,
-    classes: ["Form 1A", "Form 1B", "+1"],
-    status: "Active"
-  },
-  {
-    id: 2,
-    name: "Chemistry", 
-    code: "CHE101",
-    type: "Core",
-    teachers: 3,
-    students: 148,
-    classes: ["Form 1A", "Form 2B"],
-    status: "Active"
-  },
-  {
-    id: 3,
-    name: "Biology",
-    code: "BIO101", 
-    type: "Core",
-    teachers: 5,
-    students: 182,
-    classes: ["Form 1A", "Form 1B", "+2"],
-    status: "Active"
-  },
-  {
-    id: 4,
-    name: "Elective Mathematics",
-    code: "EMATH201",
-    type: "Elective", 
-    teachers: 3,
-    students: 145,
-    classes: ["Form 2A", "Form 3A"],
-    status: "Active"
-  },
-  {
-    id: 5,
-    name: "Elective ICT",
-    code: "ICT201",
-    type: "Elective",
-    teachers: 2, 
-    students: 132,
-    classes: ["Form 2B", "Form 3B"],
-    status: "Active"
-  },
-  {
-    id: 6,
-    name: "Technical Drawing",
-    code: "TD201",
-    type: "Elective",
-    teachers: 2,
-    students: 89,
-    classes: ["Form 2A"],
-    status: "Active"
-  }
-];
+import { subjects } from '@/lib/subjects';
 
 const tabs = ["All Subjects", "Core Subjects", "Elective Subjects"];
 
