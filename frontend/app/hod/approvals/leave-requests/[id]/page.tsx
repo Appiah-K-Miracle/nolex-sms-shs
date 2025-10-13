@@ -306,7 +306,7 @@ export default function LeaveRequestDetailPage({
                 </div>
 
                 <div className="flex gap-3">
-                  <Button onClick={handleApprove} disabled={isSubmitting} className="flex-1">
+                  <Button onClick={handleApprove} disabled={isSubmitting} className="flex-1 bg-green-700">
                     <CheckCircle2 className="mr-2 h-4 w-4" />
                     Approve Leave
                   </Button>
@@ -351,7 +351,7 @@ export default function LeaveRequestDetailPage({
                 </div>
                 <div className="h-2 bg-secondary rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-blue-600"
+                    className="h-full bg-green-600"
                     style={{
                       width: `${(leaveRequest.leaveBalance.sick / 15) * 100}%`,
                     }}
