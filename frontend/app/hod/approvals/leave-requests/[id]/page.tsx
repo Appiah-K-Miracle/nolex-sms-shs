@@ -2,8 +2,6 @@
 
 import { use } from "react"
 import { useRouter } from "next/navigation"
-import { Sidebar } from '@/components/hod/layout/Sidebar';
-import Header from '@/components/hod/layout/Header';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,7 +10,8 @@ import { Label } from "@/components/ui/label"
 import { ArrowLeft, Calendar, User, FileText, CheckCircle2, XCircle, Clock, Users } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
-
+import { Sidebar } from '@/components/hod/layout/Sidebar';
+import Header from '@/components/hod/layout/Header';
 // Mock data
 const leaveRequest = {
   id: "LR001",
@@ -99,23 +98,27 @@ export default function LeaveRequestDetailPage({
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/leave-requests">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Leave Requests
-          </Link>
-        </Button>
+    <div className="flex min-h-screen bg-gray-50">
+      <div className="hidden lg:block w-64 flex-shrink-0">
+        <Sidebar />
       </div>
+      <div className="flex-1 flex flex-col">
+        <Header
+          title={`Leave Request ${leaveRequest.id}`}
+          subtitle="Review and approve or reject this leave application"
+          actionButton={getStatusBadge(leaveRequest.status)}
+        />
+        <main className="flex-1 p-6 md:p-8 space-y-6">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/hod/approvals/leave-requests">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Leave Requests
+              </Link>
+            </Button>
+          </div>
 
-      <PageHeader
-        title={`Leave Request ${leaveRequest.id}`}
-        description="Review and approve or reject this leave application"
-        action={getStatusBadge(leaveRequest.status)}
-      />
-
-      <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Teacher Information */}
@@ -198,7 +201,7 @@ export default function LeaveRequestDetailPage({
                 </div>
               </div>
 
-              <Separator />
+              <div className="my-4 h-px bg-border w-full" />
 
               <div>
                 <Label className="text-muted-foreground">Reason for Leave</Label>
@@ -207,7 +210,7 @@ export default function LeaveRequestDetailPage({
 
               {leaveRequest.attachments.length > 0 && (
                 <>
-                  <Separator />
+                  <div className="my-4 h-px bg-border w-full" />
                   <div>
                     <Label className="text-muted-foreground">Attachments</Label>
                     <div className="mt-2 space-y-2">
@@ -264,7 +267,7 @@ export default function LeaveRequestDetailPage({
                 </div>
               )}
 
-              <Separator />
+              <div className="my-4 h-px bg-border w-full" />
 
               <div>
                 <Label className="text-muted-foreground">Affected Classes</Label>
@@ -356,7 +359,7 @@ export default function LeaveRequestDetailPage({
                 </div>
               </div>
 
-              <Separator />
+              <div className="my-4 h-px bg-border w-full" />
 
               <div className="flex items-center justify-between">
                 <Label className="text-sm text-muted-foreground">Used This Year</Label>
@@ -388,6 +391,8 @@ export default function LeaveRequestDetailPage({
             </CardContent>
           </Card>
         </div>
+          </div>
+        </main>
       </div>
     </div>
   )
