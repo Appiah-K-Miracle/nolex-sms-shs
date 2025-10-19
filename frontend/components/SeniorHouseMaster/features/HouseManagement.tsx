@@ -764,7 +764,6 @@ const HouseManagement: React.FC = () => {
               </div>
             </div>
 
-            {/* Status Dropdown - Added below Bed Capacity */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>{/* Empty div to maintain grid alignment */}</div>
               <div>

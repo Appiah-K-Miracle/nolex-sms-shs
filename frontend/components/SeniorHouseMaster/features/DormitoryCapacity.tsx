@@ -1,168 +1,145 @@
 "use client";
 
 import React from "react";
+import { Bed, Home } from "lucide-react";
 
 const DormitoryCapacity: React.FC = () => {
-  const dormitories = [
+  const houseData = [
     {
-      name: "Unity Dormitory",
-      capacity: 130,
-      occupied: 120,
-      available: 10,
-      houseMaster: "Mr. Kwame Asante",
-      status: "Good",
+      name: "Kwame Nkrumah House",
+      occupied: 312,
+      total: 320,
+      dormitories: 8,
+      color: "bg-blue-500",
     },
     {
-      name: "Peace Dormitory",
-      capacity: 130,
-      occupied: 115,
-      available: 15,
-      houseMaster: "Mrs. Ama Serwaa",
-      status: "Good",
+      name: "Yaa Asantewaa House",
+      occupied: 285,
+      total: 300,
+      dormitories: 6,
+      color: "bg-green-500",
     },
     {
-      name: "Hope Dormitory",
-      capacity: 130,
-      occupied: 125,
-      available: 5,
-      houseMaster: "Mr. David Osei",
-      status: "Near Capacity",
+      name: "Osei Tutu House",
+      occupied: 275,
+      total: 290,
+      dormitories: 7,
+      color: "bg-amber-500",
     },
     {
-      name: "Faith Dormitory",
-      capacity: 130,
-      occupied: 120,
-      available: 10,
-      houseMaster: "Ms. Efua Mensah",
-      status: "Good",
+      name: "Nana Ama House",
+      occupied: 298,
+      total: 310,
+      dormitories: 8,
+      color: "bg-purple-500",
     },
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Good":
-        return "bg-green-100 text-green-800";
-      case "Near Capacity":
-        return "bg-yellow-100 text-yellow-800";
-      case "Full":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
+  const calculateOccupancyRate = (occupied: number, total: number) => {
+    return Math.round((occupied / total) * 100);
+  };
+
+  const getOccupancyColor = (rate: number) => {
+    if (rate >= 90) return "bg-red-500";
+    if (rate >= 80) return "bg-amber-500";
+    return "bg-green-500";
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="">
         <h1 className="text-2xl font-bold text-gray-800">
-          Dormitory & Capacity
+          Dormitory & Bed Capacity
         </h1>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
-          Add Dormitory
-        </button>
+        <p className="text-gray-600">
+          Monitor occupancy levels and approve movements
+        </p>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="text-sm text-gray-600">Total Capacity</div>
-          <div className="text-2xl font-bold text-gray-800">520</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="text-sm text-gray-600">Total Occupied</div>
-          <div className="text-2xl font-bold text-gray-800">480</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="text-sm text-gray-600">Available Beds</div>
-          <div className="text-2xl font-bold text-green-600">40</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="text-sm text-gray-600">Occupancy Rate</div>
-          <div className="text-2xl font-bold text-blue-600">92.3%</div>
-        </div>
-      </div>
+      {/* House Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {houseData.map((house, index) => {
+          const occupancyRate = calculateOccupancyRate(
+            house.occupied,
+            house.total
+          );
 
-      {/* Dormitory List */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-800">
-            Dormitory Details
-          </h2>
-        </div>
+          return (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+            >
+              {/* House Name */}
+              <h3 className="font-bold text-gray-800 text-lg mb-4">
+                {house.name}
+              </h3>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Dormitory
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Capacity
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Occupied
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Available
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  House Master
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {dormitories.map((dorm, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {dorm.name}
+              <div className="space-y-4">
+                {/* Bed Count */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Bed className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm text-gray-600">Beds</span>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-gray-800 text-xl">
+                      {house.occupied}/{house.total}
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{dorm.capacity}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{dorm.occupied}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-green-600">
-                      {dorm.available}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-500">
-                      {dorm.houseMaster}
+                      {house.total - house.occupied} available
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-1 text-xs rounded-full ${getStatusColor(
-                        dorm.status
-                      )}`}
+                  </div>
+                </div>
+
+                {/* Occupancy Rate */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Occupancy Rate</span>
+                  <div className="text-right">
+                    <div
+                      className={`font-bold text-xl ${
+                        occupancyRate >= 90
+                          ? "text-red-600"
+                          : occupancyRate >= 80
+                          ? "text-amber-600"
+                          : "text-green-600"
+                      }`}
                     >
-                      {dorm.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900 mr-3">
-                      Manage
-                    </button>
-                    <button className="text-gray-600 hover:text-gray-900">
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                      {occupancyRate}%
+                    </div>
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full ${getOccupancyColor(
+                        occupancyRate
+                      )} transition-all duration-300`}
+                      style={{ width: `${occupancyRate}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>0%</span>
+                    <span>50%</span>
+                    <span>100%</span>
+                  </div>
+                </div>
+
+                {/* Dormitories Count */}
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <Home className="h-4 w-4 text-gray-600" />
+                    <span className="text-sm text-gray-600">Dormitories</span>
+                  </div>
+                  <span className="font-semibold text-gray-800">
+                    {house.dormitories}
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
