@@ -11,8 +11,12 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
+import { useHouses } from "@/hooks/useHouses";
 
 const DisciplineOversight: React.FC = () => {
+  const { data } = useSeniorHouseMaster();
+  const houses = useHouses();
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedSeverity, setSelectedSeverity] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,120 +43,28 @@ const DisciplineOversight: React.FC = () => {
     recommendedAction: "",
   });
 
-  const disciplinaryCases = [
-    {
-      id: "DC001",
-      studentName: "Kofi Mensah",
-      studentId: "SHS2025001",
-      grade: "SHS 1",
-      dormitory: "Unity",
-      house: "Unity",
-      offenseType: "Late to dormitory",
-      date: "2024-01-15",
-      time: "20:30",
-      status: "Approved",
-      severity: "Warning",
-      actionTaken: "Warning issued",
-      reportedBy: "Mr. Kwesi Appiah",
-      description: "Student returned to dormitory 30 minutes after curfew",
-      witnessStatements: "Prefect John confirmed the late arrival",
-      recommendedAction: "Verbal warning and documentation",
-    },
-    {
-      id: "DC002",
-      studentName: "Mike Johnson",
-      studentId: "SHS2025002",
-      grade: "SHS 2",
-      dormitory: "Peace",
-      house: "Peace",
-      offenseType: "Noise after lights out",
-      date: "2024-01-16",
-      time: "22:45",
-      status: "Approved",
-      severity: "Suspension",
-      actionTaken: "Under review",
-      reportedBy: "Mrs. Ama Serwaa",
-      description: "Loud noise and disturbance from room after lights out",
-      witnessStatements: "Multiple students reported the disturbance",
-      recommendedAction: "3-day suspension",
-    },
-    {
-      id: "DC003",
-      studentName: "David Brown",
-      studentId: "SHS2025003",
-      grade: "SHS 3",
-      dormitory: "Hope",
-      house: "Hope",
-      offenseType: "Unauthorized leave",
-      date: "2024-01-14",
-      time: "14:00",
-      status: "Escalated",
-      severity: "Explusion Review",
-      actionTaken: "Parent meeting scheduled",
-      reportedBy: "Mr. David Osei",
-      description: "Left campus without permission during school hours",
-      witnessStatements: "Security guard confirmed exit",
-      recommendedAction: "Expulsion review committee",
-    },
-    {
-      id: "DC004",
-      studentName: "James Wilson",
-      studentId: "SHS2025004",
-      grade: "SHS 1",
-      dormitory: "Faith",
-      house: "Faith",
-      offenseType: "Improper uniform",
-      date: "2024-01-17",
-      time: "08:15",
-      status: "Approved",
-      severity: "Warning",
-      actionTaken: "Corrected on spot",
-      reportedBy: "Mr. Kofi Mensah",
-      description: "Wearing non-regulation shoes and untucked shirt",
-      witnessStatements: "",
-      recommendedAction: "Immediate correction and warning",
-    },
-    {
-      id: "DC005",
-      studentName: "Robert Davis",
-      studentId: "SHS2025005",
-      grade: "SHS 2",
-      dormitory: "Unity",
-      house: "Unity",
-      offenseType: "Missing class",
-      date: "2024-01-18",
-      time: "10:30",
-      status: "Pending Approval",
-      severity: "Warning",
-      actionTaken: "Detention assigned",
-      reportedBy: "Mrs. Abena Osei",
-      description: "Skipped mathematics class without permission",
-      witnessStatements: "Class prefect confirmed absence",
-      recommendedAction: "2 hours detention and parent notification",
-    },
-    {
-      id: "DC006",
-      studentName: "Thomas Miller",
-      studentId: "SHS2025006",
-      grade: "SHS 3",
-      dormitory: "Peace",
-      house: "Peace",
-      offenseType: "Fighting",
-      date: "2024-01-19",
-      time: "16:20",
-      status: "Pending Approval",
-      severity: "Explusion Review",
-      actionTaken: "Suspension pending",
-      reportedBy: "Mr. Kwame Asante",
-      description: "Physical altercation with another student in the dormitory",
-      witnessStatements: "Multiple witnesses confirmed physical fight",
-      recommendedAction: "Immediate suspension pending expulsion review",
-    },
-  ];
+  // Use disciplineCases from context data
+  const disciplineCasesData = data?.disciplineCases || [];
 
-  const houses = ["Unity", "Peace", "Hope", "Faith", "All Houses"];
-  const severityLevels = ["Warning", "Suspension", "Explusion Review"];
-  const grades = ["SHS 1", "SHS 2", "SHS 3"];
+  // Get house names from houses data
+  const houseNames = houses.map((house) => house.name);
+
+  // Get unique grades from discipline cases
+  const grades = [
+    ...new Set(disciplineCasesData.map((caseItem) => caseItem.grade)),
+  ];
+  const defaultGrades = ["SHS 1", "SHS 2", "SHS 3"];
+  const availableGrades = grades.length > 0 ? grades : defaultGrades;
+
+  // Get severity levels from discipline cases
+  const severityLevelsFromData = [
+    ...new Set(disciplineCasesData.map((caseItem) => caseItem.severity)),
+  ];
+  const defaultSeverityLevels = ["Warning", "Suspension", "Explusion Review"];
+  const severityLevels =
+    severityLevelsFromData.length > 0
+      ? severityLevelsFromData
+      : defaultSeverityLevels;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -180,7 +92,7 @@ const DisciplineOversight: React.FC = () => {
     }
   };
 
-  const filteredCases = disciplinaryCases.filter((caseItem) => {
+  const filteredCases = disciplineCasesData.filter((caseItem) => {
     const matchesStatus =
       selectedStatus === "all" || caseItem.status === selectedStatus;
     const matchesSeverity =
@@ -198,12 +110,12 @@ const DisciplineOversight: React.FC = () => {
     : filteredCases.slice(0, 6);
 
   // Handler functions
-  const handleViewCase = (caseItem: any) => {
+  const handleViewCase = (caseItem: unknown) => {
     setSelectedCase(caseItem);
     setCurrentView("viewCase");
   };
 
-  const handleEditCase = (caseItem: any) => {
+  const handleEditCase = (caseItem: unknown) => {
     setSelectedCase(caseItem);
     setCurrentView("editCase");
   };
@@ -356,7 +268,7 @@ const DisciplineOversight: React.FC = () => {
                     required
                   >
                     <option value="">Select House</option>
-                    {houses.map((house) => (
+                    {houseNames.map((house) => (
                       <option key={house} value={house}>
                         {house}
                       </option>
@@ -375,7 +287,7 @@ const DisciplineOversight: React.FC = () => {
                     required
                   >
                     <option value="">Select Grade</option>
-                    {grades.map((grade) => (
+                    {availableGrades.map((grade) => (
                       <option key={grade} value={grade}>
                         {grade}
                       </option>
@@ -578,7 +490,7 @@ const DisciplineOversight: React.FC = () => {
             </p>
           </div>
 
-          {/* Approve/Reject buttons - only show for pending cases */}
+          {/* Approve/Reject buttons - only showing for pending cases */}
           {selectedCase.status === "Pending Approval" && (
             <div className="flex space-x-3">
               <button
@@ -848,7 +760,7 @@ const DisciplineOversight: React.FC = () => {
                     required
                   >
                     <option value="">Select House</option>
-                    {houses.map((house) => (
+                    {houseNames.map((house) => (
                       <option key={house} value={house}>
                         {house}
                       </option>
@@ -869,7 +781,7 @@ const DisciplineOversight: React.FC = () => {
                     required
                   >
                     <option value="">Select Grade</option>
-                    {grades.map((grade) => (
+                    {availableGrades.map((grade) => (
                       <option key={grade} value={grade}>
                         {grade}
                       </option>
@@ -1088,7 +1000,7 @@ const DisciplineOversight: React.FC = () => {
             />
           </div>
 
-          {/* Filter Options - Inline on larger screens */}
+          {/* Filter Options */}
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
             <div className="flex-1">
               <select

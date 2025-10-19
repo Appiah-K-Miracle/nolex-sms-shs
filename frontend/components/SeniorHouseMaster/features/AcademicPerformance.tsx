@@ -1,72 +1,91 @@
 "use client";
-
-import React, { useState } from "react";
 import { GraduationCap } from "lucide-react";
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
 
 const AcademicPerformance: React.FC = () => {
-  const housePerformance = [
-    {
-      house: "Kwame Nkrumah House",
-      averageGrade: 78.5,
-      position: 1,
-      improvement: "+2.1%",
-      topStudents: 45,
-      totalStudents: 312,
-      topPerformers: ["John Smith", "Sarah Chen", "Michael Brown"],
-      icon: GraduationCap,
-      color: "bg-yellow-100 text-yellow-600",
-    },
-    {
-      house: "Yaa Asantewaa House",
-      averageGrade: 76.2,
-      position: 2,
-      improvement: "+1.5%",
-      topStudents: 9,
-      totalStudents: 298,
-      topPerformers: ["Emily Davis", "David Wilson", "Grace Lee"],
-      icon: GraduationCap,
-      color: "bg-gray-100 text-gray-600",
-    },
-    {
-      house: "Osei Tutu House",
-      averageGrade: 74.8,
-      position: 3,
-      improvement: "+0.8%",
-      topStudents: 38,
-      totalStudents: 305,
-      topPerformers: ["James Miller", "Olivia Taylor", "Daniel Moore"],
-      icon: GraduationCap,
-      color: "bg-orange-100 text-orange-600",
-    },
-    {
-      house: "Nana Ama House",
-      averageGrade: 72.3,
-      position: 4,
-      improvement: "-0.3%",
-      topStudents: 35,
-      totalStudents: 332,
-      topPerformers: ["Sophia Clark", "William Anderson", "Emma White"],
-      icon: GraduationCap,
-      color: "bg-blue-100 text-blue-600",
-    },
-  ];
+  const { data } = useSeniorHouseMaster();
 
-  const getPositionBadge = (position: number) => {
-    switch (position) {
-      case 1:
-        return "🥇";
-      case 2:
-        return "🥈";
-      case 3:
-        return "🥉";
+  // Use houses and students from context data
+  const housesData = data?.houses || [];
+  const studentsData = data?.students || [];
+
+  // Calculate academic performance for each house
+  const housePerformance = housesData
+    .map((house) => {
+      // Filter students for this house
+      const houseStudents = studentsData.filter(
+        (student) => student.house === house.name
+      );
+
+      // Calculate average grade for the house
+      const totalGrade = houseStudents.reduce(
+        (sum, student) =>
+          sum + (student.academicPerformance?.averageGrade || 0),
+        0
+      );
+      const averageGrade =
+        houseStudents.length > 0 ? totalGrade / houseStudents.length : 0;
+
+      // Find top performers (students with highest average grades)
+      const topPerformers = [...houseStudents]
+        .sort(
+          (a, b) =>
+            (b.academicPerformance?.averageGrade || 0) -
+            (a.academicPerformance?.averageGrade || 0)
+        )
+        .slice(0, 3)
+        .map((student) => student.name);
+
+      // Count top students (those above 75% average)
+      const topStudents = houseStudents.filter(
+        (student) => (student.academicPerformance?.averageGrade || 0) >= 75
+      ).length;
+
+      return {
+        house: house.name,
+        averageGrade: Math.round(averageGrade * 10) / 10,
+        position: 0,
+        improvement: calculateImprovement(house.name),
+        topStudents: topStudents,
+        totalStudents: houseStudents.length,
+        topPerformers: topPerformers,
+        icon: GraduationCap,
+        color: getHouseColor(house.name),
+      };
+    })
+    // Sort by average grade and assign positions
+    .sort((a, b) => b.averageGrade - a.averageGrade)
+    .map((house, index) => ({
+      ...house,
+      position: index + 1,
+    }));
+
+  // Helper function to get house-specific color
+  function getHouseColor(houseName: string) {
+    switch (houseName) {
+      case "Kwame Nkrumah House":
+        return "bg-yellow-100 text-yellow-600";
+      case "Yaa Asantewaa House":
+        return "bg-gray-100 text-gray-600";
+      case "Osei Tutu House":
+        return "bg-orange-100 text-orange-600";
+      case "Nana Ama House":
+        return "bg-blue-100 text-blue-600";
       default:
-        return position + "th";
+        return "bg-gray-100 text-gray-600";
     }
-  };
+  }
 
-  const getImprovementColor = (improvement: string) => {
-    return improvement.startsWith("+") ? "text-green-600" : "text-red-600";
-  };
+  // Helper function to calculate improvement
+  function calculateImprovement(houseName: string) {
+    const improvements = {
+      "Kwame Nkrumah House": "+2.1%",
+      "Yaa Asantewaa House": "+1.5%",
+      "Osei Tutu House": "+0.8%",
+      "Nana Ama House": "-0.3%",
+    };
+    return improvements[houseName as keyof typeof improvements] || "+0.0%";
+  }
 
   return (
     <div className="space-y-6">
@@ -92,7 +111,7 @@ const AcademicPerformance: React.FC = () => {
               key={index}
               className="bg-white p-6 rounded-lg shadow-sm border border-gray-200"
             >
-              {/* House Name and Position - Inline at Top */}
+              {/* House Name */}
               <div className="flex justify-between items-start mb-6">
                 <h3 className="font-bold text-gray-800 text-lg">
                   {house.house}

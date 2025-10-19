@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Users,
@@ -12,28 +11,17 @@ import {
   Save,
   Edit,
 } from "lucide-react";
+import { useHouses, useHouseByName } from "@/hooks/useHouses";
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
 
 const HouseManagement: React.FC = () => {
-  interface House {
-    id?: string;
-    name: string;
-    master: string;
-    email: string;
-    phone: string;
-    capacity: string;
-    description: string;
-    location: string;
-    status: string;
-    population: string;
-    discipline: string;
-    occupancy: string;
-    standing: string;
-  }
+  const { data, updateHouse } = useSeniorHouseMaster();
+  const houses = useHouses();
 
   const [currentView, setCurrentView] = useState<
     "dashboard" | "addHouse" | "viewHouse" | "editHouse"
   >("dashboard");
-  const [selectedHouse, setSelectedHouse] = useState<House | null>(null);
+  const [selectedHouse, setSelectedHouse] = useState<any>(null);
   const [newHouse, setNewHouse] = useState({
     name: "",
     master: "",
@@ -44,65 +32,6 @@ const HouseManagement: React.FC = () => {
     location: "",
     status: "Good",
   });
-
-  const houses = [
-    {
-      id: 1,
-      name: "Kwame Nkrumah House",
-      master: "Mr. Kwesi Appiah",
-      email: "kwesi.appiah@school.edu",
-      phone: "+233 24 123 4567",
-      standing: "Excellent",
-      population: 312,
-      capacity: 320,
-      discipline: 95,
-      occupancy: "98%",
-      description: "Well-maintained house with excellent discipline record.",
-      location: "North Campus, Block A",
-    },
-    {
-      id: 2,
-      name: "Yaa Asantewaa House",
-      master: "Mrs. Akosua Mensah",
-      email: "akosua.mensah@school.edu",
-      phone: "+233 24 234 5678",
-      standing: "Excellent",
-      population: 298,
-      capacity: 310,
-      discipline: 92,
-      occupancy: "96%",
-      description: "Well-maintained house with excellent discipline record.",
-      location: "North Campus, Block B",
-    },
-    {
-      id: 3,
-      name: "Osei Tutu House",
-      master: "Mr. Kofi Boateng",
-      email: "kofi.boateng@school.edu",
-      phone: "+233 24 345 6789",
-      standing: "Good",
-      population: 305,
-      capacity: 315,
-      discipline: 88,
-      occupancy: "97%",
-      description: "Well-maintained house with excellent discipline record.",
-      location: "North Campus, Block C",
-    },
-    {
-      id: 4,
-      name: "Nana Ama House",
-      master: "Mrs. Ama Serwaa",
-      email: "ama.serwaa@school.edu",
-      phone: "+233 24 456 7890",
-      standing: "Overcrowded",
-      population: 332,
-      capacity: 305,
-      discipline: 85,
-      occupancy: "109%",
-      description: "Well-maintained house with excellent discipline record.",
-      location: "North Campus, Block D",
-    },
-  ];
 
   const getStandingColor = (standing: string) => {
     switch (standing) {
@@ -119,8 +48,35 @@ const HouseManagement: React.FC = () => {
 
   const handleAddHouse = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("New house:", newHouse);
+
+    // Create new house object
+    const houseToAdd = {
+      id: (houses.length + 1).toString(),
+      name: newHouse.name,
+      master: newHouse.master,
+      email: newHouse.email,
+      phone: newHouse.phone,
+      capacity: parseInt(newHouse.capacity),
+      population: 0,
+      discipline: 0,
+      occupancy: "0%",
+      standing: newHouse.status,
+      description: newHouse.description,
+      location: newHouse.location,
+      dormitories: 0,
+      points: 0,
+      academicAverage: 0,
+      competitionScores: {
+        sports: 0,
+        culture: 0,
+        sanitation: 0,
+        total: 0,
+      },
+    };
+
+    console.log("New house:", houseToAdd);
     alert("House added successfully!");
+
     setNewHouse({
       name: "",
       master: "",
@@ -136,17 +92,19 @@ const HouseManagement: React.FC = () => {
 
   const handleEditHouse = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Edited house:", selectedHouse);
-    alert("House updated successfully!");
+    if (selectedHouse) {
+      updateHouse(selectedHouse.id, selectedHouse);
+      alert("House updated successfully!");
+    }
     setCurrentView("dashboard");
   };
 
-  const handleViewDetails = (house: House) => {
+  const handleViewDetails = (house: any) => {
     setSelectedHouse(house);
     setCurrentView("viewHouse");
   };
 
-  const handleEditClick = (house: House) => {
+  const handleEditClick = (house: any) => {
     setSelectedHouse(house);
     setCurrentView("editHouse");
   };
@@ -199,7 +157,7 @@ const HouseManagement: React.FC = () => {
                     setNewHouse((prev) => ({ ...prev, name: e.target.value }))
                   }
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                  placeholder="eg.,Kwame Nkrumah House"
+                  placeholder="eg., Kwame Nkrumah House"
                   required
                 />
               </div>
@@ -214,7 +172,7 @@ const HouseManagement: React.FC = () => {
                     setNewHouse((prev) => ({ ...prev, master: e.target.value }))
                   }
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                  placeholder="eg.,Mr. Kwesi Appiah"
+                  placeholder="eg., Mr. Kwesi Appiah"
                   required
                 />
               </div>
@@ -238,7 +196,7 @@ const HouseManagement: React.FC = () => {
                   required
                 />
               </div>
-              {/* Status Field - Added here */}
+              {/* Status Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Status *
@@ -498,182 +456,6 @@ const HouseManagement: React.FC = () => {
             </p>
           </div>
         </div>
-
-        {/* Third Row - Card with 3 Sub-cards */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Recent Requests
-          </h3>
-          <div className="space-y-4">
-            {/* Request 1 */}
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="font-semibold text-gray-800">
-                    Room Reassignment
-                  </p>
-                </div>
-                <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                  Pending
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-sm text-gray-600">
-                <p>Kofi Mensah</p>
-                <p>2025-01-08</p>
-              </div>
-            </div>
-
-            {/* Request 2 */}
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="font-semibold text-gray-800">Supply Request</p>
-                </div>
-                <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  Approved
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-sm text-gray-600">
-                <p>
-                  Mattresses <span>(5)</span>
-                </p>
-                <p>2025-01-07</p>
-              </div>
-            </div>
-
-            {/* Request 3 */}
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="font-semibold text-gray-800">Maintenance</p>
-                </div>
-                <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-800">
-                  In Progress
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-sm text-gray-600">
-                <p>Plumbing repair</p>
-                <p>2025-01-06</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Fourth Row - Card with Title and 4 Sub-cards */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Dormitories Overview
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Sub-card 1 - Dorm A */}
-            <div className="bg-white p-4 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-start mb-3">
-                <p className="font-semibold text-gray-800">Dorm A</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Beds</p>
-                <p className="text-sm font-semibold text-gray-800">80</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Occupied</p>
-                <p className="text-sm font-semibold text-gray-800">78</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Conditon</p>
-                <span className="px-2 py-1 rounded-full text-xs font-medium">
-                  Good
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-green-900 h-2 rounded-full"
-                  style={{ width: "98%" }}
-                ></div>
-              </div>
-            </div>
-
-            {/* Sub-card 2 - Dorm B */}
-            <div className="bg-white p-4 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-start mb-3">
-                <p className="font-semibold text-gray-800">Dorm B</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Beds</p>
-                <p className="text-sm font-semibold text-gray-800">80</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Occupied</p>
-                <p className="text-sm font-semibold text-gray-800">80</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Conditon</p>
-                <span className="px-2 py-1 rounded-full text-xs font-medium">
-                  Excellent
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-green-900 h-2 rounded-full"
-                  style={{ width: "100%" }}
-                ></div>
-              </div>
-            </div>
-
-            {/* Sub-card 3 - Dorm C */}
-            <div className="bg-white p-4 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-start mb-3">
-                <p className="font-semibold text-gray-800">Dorm C</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Beds</p>
-                <p className="text-sm font-semibold text-gray-800">80</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Occupied</p>
-                <p className="text-sm font-semibold text-gray-800">76</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Conditon</p>
-                <span className="px-2 py-1 rounded-full text-xs font-medium">
-                  Good
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-green-900 h-2 rounded-full"
-                  style={{ width: "96%" }}
-                ></div>
-              </div>
-            </div>
-
-            {/* Sub-card 4 - Dorm D */}
-            <div className="bg-white p-4 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-start mb-3">
-                <p className="font-semibold text-gray-800">Dorm D</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Beds</p>
-                <p className="text-sm font-semibold text-gray-800">80</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Occupied</p>
-                <p className="text-sm font-semibold text-gray-800">78</p>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-sm text-gray-600">Conditon</p>
-                <span className="px-2 py-1 rounded-full text-xs font-medium ">
-                  Fair
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-green-900 h-2 rounded-full"
-                  style={{ width: "98%" }}
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
@@ -755,7 +537,7 @@ const HouseManagement: React.FC = () => {
                   onChange={(e) =>
                     setSelectedHouse({
                       ...selectedHouse,
-                      capacity: e.target.value,
+                      capacity: parseInt(e.target.value),
                     })
                   }
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"

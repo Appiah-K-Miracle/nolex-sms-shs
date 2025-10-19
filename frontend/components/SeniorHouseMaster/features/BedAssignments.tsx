@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Plus,
@@ -9,15 +8,18 @@ import {
   Edit2,
   Building2,
   X,
-  Search,
   ArrowLeft,
   Save,
   Calendar,
 } from "lucide-react";
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
+import { useHouses } from "@/hooks/useHouses";
 
 const BedAssignments: React.FC = () => {
+  const { data } = useSeniorHouseMaster();
+  const houses = useHouses();
   const [currentView, setCurrentView] = useState("dashboard");
-  const [selectedAssignment, setSelectedAssignment] = useState<any>(null);
+  const [selectedAssignment, setSelectedAssignment] = useState<unknown>(null);
   const [visibleAssignments, setVisibleAssignments] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -31,137 +33,79 @@ const BedAssignments: React.FC = () => {
     date: new Date().toISOString().split("T")[0],
   });
 
+  // Use bedAssignments from context data
+  const bedAssignmentsData = data?.bedAssignments || [];
+
+  // Get house names from houses data
+  const houseNames = houses.map((house) => house.name);
+
+  // Generate rooms and beds based on house capacity
+  const generateRoomsAndBeds = (houseName: string) => {
+    const house = houses.find((h) => h.name === houseName);
+    if (!house) return { rooms: [], beds: [] };
+
+    // Calculate rooms based on capacity
+    const roomCount = Math.ceil(house.capacity / 4);
+    const rooms = Array.from(
+      { length: roomCount },
+      (_, i) => `Room ${i + 101}`
+    );
+
+    // Standard beds per room
+    const beds = ["Bed A", "Bed B", "Bed C", "Bed D", "Bed E", "Bed F"];
+
+    return { rooms, beds };
+  };
+
+  // Calculate stats dynamically from bedAssignments data
+  const totalBeds = houses.reduce((total, house) => total + house.capacity, 0);
+  const occupiedBeds = bedAssignmentsData.filter(
+    (assignment) => assignment.status === "Occupied"
+  ).length;
+  const availableBeds = bedAssignmentsData.filter(
+    (assignment) => assignment.status === "Available"
+  ).length;
+
+  // Calculate dormitories based on house data
+  const totalDormitories = houses.reduce(
+    (total, house) =>
+      total + (house.dormitories || Math.ceil(house.capacity / 40)),
+    0
+  );
+
   const bedAssignments = [
     {
       id: 1,
       title: "Total Beds",
-      count: 240,
+      count: totalBeds,
       description: "Across all dormitories",
       icon: Bed,
     },
     {
       id: 2,
       title: "Occupied",
-      count: 218,
-      description: "91% occupancy",
+      count: occupiedBeds,
+      description: `${Math.round((occupiedBeds / totalBeds) * 100)}% occupancy`,
       icon: Users,
     },
     {
       id: 3,
       title: "Available",
-      count: 22,
+      count: availableBeds,
       description: "Ready for assignment",
       icon: Bed,
     },
     {
       id: 4,
       title: "Dormitories",
-      count: 12,
+      count: totalDormitories,
       description: "Active blocks",
       icon: Building2,
     },
   ];
 
-  const recentAssignments = [
-    {
-      id: 1,
-      studentName: "Kwame Osei",
-      room: "Room 101",
-      bed: "Bed A",
-      house: "Nkrumah House - Block A",
-      indexNumber: "SH2024001",
-      date: "2024-01-15",
-      status: "Occupied",
-    },
-    {
-      id: 2,
-      studentName: "Abena Mensah",
-      room: "Room 205",
-      bed: "Bed B",
-      house: "Yaa Asantewaa House",
-      indexNumber: "SH2024045",
-      date: "2024-01-14",
-      status: "Occupied",
-    },
-    {
-      id: 3,
-      studentName: "Michael Brown",
-      room: "Room 312",
-      bed: "Bed C",
-      house: "Osei Tutu House",
-      indexNumber: "STU003",
-      date: "2024-01-13",
-      status: "Maintenance",
-    },
-    {
-      id: 4,
-      studentName: "",
-      room: "Room 118",
-      bed: "Bed D",
-      house: "Nana Ama House",
-      indexNumber: "",
-      date: "2024-01-12",
-      status: "Available",
-    },
-    {
-      id: 5,
-      studentName: "Kwame Yaw",
-      room: "Room 209",
-      bed: "Bed E",
-      house: "Nkrumah House",
-      indexNumber: "STU005",
-      date: "2024-01-11",
-      status: "Occupied",
-    },
-    {
-      id: 6,
-      studentName: "Emmanuel Kofi",
-      room: "Room 305",
-      bed: "Bed F",
-      house: "Yaa Asantewaa House",
-      indexNumber: "STU006",
-      date: "2024-01-10",
-      status: "Occupied",
-    },
-    {
-      id: 7,
-      studentName: "",
-      room: "Room 215",
-      bed: "Bed G",
-      house: "Nkrumah House",
-      indexNumber: "",
-      date: "2024-01-09",
-      status: "Available",
-    },
-    {
-      id: 8,
-      studentName: "Ama Serwaa",
-      room: "Room 104",
-      bed: "Bed H",
-      house: "Yaa Asantewaa House",
-      indexNumber: "STU008",
-      date: "2024-01-08",
-      status: "Occupied",
-    },
-  ];
-
-  const houses = [
-    "Nkrumah House",
-    "Yaa Asantewaa House",
-    "Osei Tutu House",
-    "Nana Ama House",
-  ];
-  const rooms = [
-    "Room 101",
-    "Room 102",
-    "Room 103",
-    "Room 104",
-    "Room 201",
-    "Room 202",
-    "Room 203",
-    "Room 204",
-  ];
-  const beds = ["Bed A", "Bed B", "Bed C", "Bed D"];
+  // Use bedAssignments from context data for recent assignments
+  const recentAssignments = bedAssignmentsData;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -176,7 +120,7 @@ const BedAssignments: React.FC = () => {
     }
   };
 
-  // Filter assignments based on search term
+  // Filter assignments
   const filteredAssignments = recentAssignments.filter(
     (assignment) =>
       assignment.bed.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -187,12 +131,12 @@ const BedAssignments: React.FC = () => {
 
   const displayedAssignments = filteredAssignments.slice(0, visibleAssignments);
 
-  const handleViewAssignment = (assignment: any) => {
+  const handleViewAssignment = (assignment: unknown) => {
     setSelectedAssignment(assignment);
     setCurrentView("viewAssignment");
   };
 
-  const handleEditAssignment = (assignment: any) => {
+  const handleEditAssignment = (assignment: unknown) => {
     setSelectedAssignment(assignment);
     setCurrentView("editAssignment");
   };
@@ -203,7 +147,7 @@ const BedAssignments: React.FC = () => {
 
   const handleAssignBed = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to an API
+    //send the data to an API
     console.log("Assigning bed:", assignForm);
     // Reset form and close modal
     setAssignForm({
@@ -242,11 +186,20 @@ const BedAssignments: React.FC = () => {
     }));
   };
 
+  // Get rooms and beds for selected house
+  const getRoomsForHouse = (houseName: string) => {
+    return generateRoomsAndBeds(houseName).rooms;
+  };
+
+  const getBedsForHouse = (houseName: string) => {
+    return generateRoomsAndBeds(houseName).beds;
+  };
+
   // View Assignment Form (Read-only)
   if (currentView === "viewAssignment" && selectedAssignment) {
     return (
       <div className="space-y-6">
-        {/* Header with Back Button, Assignment Info, and Edit Button */}
+        {/* Header  */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -438,6 +391,9 @@ const BedAssignments: React.FC = () => {
 
   // Edit Assignment Form
   if (currentView === "editAssignment" && selectedAssignment) {
+    const currentRooms = getRoomsForHouse(selectedAssignment.house);
+    const currentBeds = getBedsForHouse(selectedAssignment.house);
+
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
@@ -482,7 +438,7 @@ const BedAssignments: React.FC = () => {
                     required
                   >
                     <option value="">Select House</option>
-                    {houses.map((house) => (
+                    {houseNames.map((house) => (
                       <option key={house} value={house}>
                         {house}
                       </option>
@@ -504,7 +460,7 @@ const BedAssignments: React.FC = () => {
                     required
                   >
                     <option value="">Select Room</option>
-                    {rooms.map((room) => (
+                    {currentRooms.map((room) => (
                       <option key={room} value={room}>
                         {room}
                       </option>
@@ -526,7 +482,7 @@ const BedAssignments: React.FC = () => {
                     required
                   >
                     <option value="">Select Bed</option>
-                    {beds.map((bed) => (
+                    {currentBeds.map((bed) => (
                       <option key={bed} value={bed}>
                         {bed}
                       </option>
@@ -643,6 +599,9 @@ const BedAssignments: React.FC = () => {
 
   // Add New Bed Assignment Form
   if (currentView === "assignBed") {
+    const currentRooms = getRoomsForHouse(assignForm.house);
+    const currentBeds = getBedsForHouse(assignForm.house);
+
     return (
       <div className="space-y-6">
         {/* Back Button and Header */}
@@ -727,7 +686,7 @@ const BedAssignments: React.FC = () => {
                     required
                   >
                     <option value="">Select House</option>
-                    {houses.map((house) => (
+                    {houseNames.map((house) => (
                       <option key={house} value={house}>
                         {house}
                       </option>
@@ -743,9 +702,10 @@ const BedAssignments: React.FC = () => {
                     onChange={(e) => handleFormChange("room", e.target.value)}
                     className="w-full border-0 border-b-2 border-gray-200 px-3 py-3 bg-transparent focus:outline-none focus:border-green-500 transition-all duration-200 appearance-none"
                     required
+                    disabled={!assignForm.house}
                   >
                     <option value="">Select Room</option>
-                    {rooms.map((room) => (
+                    {currentRooms.map((room) => (
                       <option key={room} value={room}>
                         {room}
                       </option>
@@ -761,9 +721,10 @@ const BedAssignments: React.FC = () => {
                     onChange={(e) => handleFormChange("bed", e.target.value)}
                     className="w-full border-0 border-b-2 border-gray-200 px-3 py-3 bg-transparent focus:outline-none focus:border-green-500 transition-all duration-200 appearance-none"
                     required
+                    disabled={!assignForm.house}
                   >
                     <option value="">Select Bed</option>
-                    {beds.map((bed) => (
+                    {currentBeds.map((bed) => (
                       <option key={bed} value={bed}>
                         {bed}
                       </option>
@@ -918,7 +879,7 @@ const BedAssignments: React.FC = () => {
                 </div>
               </div>
 
-              {/* Bottom Section: Status and Buttons - All Inline */}
+              {/* Bottom Section: Status and Buttons */}
               <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                 {/* Status Badge */}
                 <span

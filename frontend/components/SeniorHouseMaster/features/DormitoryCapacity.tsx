@@ -1,39 +1,18 @@
 "use client";
-
 import React from "react";
 import { Bed, Home } from "lucide-react";
+import { useHouses } from "@/hooks/useHouses";
 
 const DormitoryCapacity: React.FC = () => {
-  const houseData = [
-    {
-      name: "Kwame Nkrumah House",
-      occupied: 312,
-      total: 320,
-      dormitories: 8,
-      color: "bg-blue-500",
-    },
-    {
-      name: "Yaa Asantewaa House",
-      occupied: 285,
-      total: 300,
-      dormitories: 6,
-      color: "bg-green-500",
-    },
-    {
-      name: "Osei Tutu House",
-      occupied: 275,
-      total: 290,
-      dormitories: 7,
-      color: "bg-amber-500",
-    },
-    {
-      name: "Nana Ama House",
-      occupied: 298,
-      total: 310,
-      dormitories: 8,
-      color: "bg-purple-500",
-    },
-  ];
+  const houses = useHouses();
+
+  // Transform the houses data to match the expected format
+  const houseData = houses.map((house) => ({
+    name: house.name,
+    occupied: house.population,
+    total: house.capacity,
+    dormitories: house.dormitories || Math.ceil(house.capacity / 40),
+  }));
 
   const calculateOccupancyRate = (occupied: number, total: number) => {
     return Math.round((occupied / total) * 100);

@@ -1,15 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Download,
-  FileText,
-  BarChart3,
-  Users,
-  Calendar,
-  Building2,
-  TrendingUp,
-} from "lucide-react";
+import { Download, FileText } from "lucide-react";
 
 const ReportsExport: React.FC = () => {
   const reportCards = [
