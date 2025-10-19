@@ -3,11 +3,11 @@
 import React from "react";
 import { Sidebar } from "@/components/headmaster/layout/Sidebar";
 import Header from "@/components/headmaster/layout/Header";
-import MetricsCards from "@/components/acdemics/students/MetricsCards";
+import MetricsCards from "@/components/headmaster/acdemics/students/MetricsCards";
 import { Button } from "@/components/ui/button";
 import { Download, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import StudentsTable from "@/components/acdemics/students/StudentsTable";
+import StudentsTable from "@/components/headmaster/acdemics/students/StudentsTable";
 
 const StudentPage = () => {
   const router = useRouter();

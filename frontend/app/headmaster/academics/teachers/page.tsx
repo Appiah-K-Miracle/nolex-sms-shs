@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/headmaster/layout/Header";
-import TeachersMetricCards from "@/components/acdemics/teachers/TeachersMetricCards";
-import TeachersTable from "@/components/acdemics/teachers/TeachersTable";
+import TeachersMetricCards from "@/components/headmaster/acdemics/teachers/TeachersMetricCards";
+import TeachersTable from "@/components/headmaster/acdemics/teachers/TeachersTable";
 
 const TeachersPage = () => {
   const router = useRouter();

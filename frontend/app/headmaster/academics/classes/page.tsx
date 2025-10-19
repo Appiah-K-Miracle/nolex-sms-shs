@@ -4,8 +4,8 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/headmaster/layout/Header";
 import { Sidebar } from "@/components/headmaster/layout/Sidebar";
-import ClassesMetricCards from "@/components/acdemics/classes/ClassesMetricCards";
-import Classes from "@/components/acdemics/classes/Classes";
+import ClassesMetricCards from "@/components/headmaster/acdemics/classes/ClassesMetricCards";
+import Classes from "@/components/headmaster/acdemics/classes/Classes";
 import { Button } from "@/components/ui/button";
 
 

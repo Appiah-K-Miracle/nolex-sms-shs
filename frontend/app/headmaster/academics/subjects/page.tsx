@@ -9,8 +9,8 @@ import {
 import { useRouter } from "next/navigation";
 import Header from "@/components/headmaster/layout/Header";
 import { Sidebar } from "@/components/headmaster/layout/Sidebar";
-import SubjectsMetrics from "@/components/acdemics/subjects/SubjectsMetrics";
-import SubjectCards from "@/components/acdemics/subjects/SubjectCards";
+import SubjectsMetrics from "@/components/headmaster/acdemics/subjects/SubjectsMetrics";
+import SubjectCards from "@/components/headmaster/acdemics/subjects/SubjectCards";
 
 export default function SubjectsPage() {
   const router = useRouter();

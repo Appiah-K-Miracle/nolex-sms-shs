@@ -61,6 +61,7 @@ const HeadmasterAnalyticsChart = () => {
           <Bar dataKey="target" fill="#82ca9d" />
         </BarChart>
       </div>
+      
 
       {/* Subject Performance Overview Chart */}
       <div className="border rounded-lg shadow-md p-4">
