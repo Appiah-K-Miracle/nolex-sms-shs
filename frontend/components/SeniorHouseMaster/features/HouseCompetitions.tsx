@@ -1,11 +1,12 @@
 "use client";
-
 import React, { useState } from "react";
 import { Plus, Trophy, ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
 
 const HouseCompetitions: React.FC = () => {
+  const { data } = useSeniorHouseMaster();
   const [showForm, setShowForm] = useState(false);
   const [newCompetition, setNewCompetition] = useState({
     name: "",
@@ -14,56 +15,61 @@ const HouseCompetitions: React.FC = () => {
     description: "",
   });
 
-  const houseScores = [
-    {
-      house: "Kwame Nkrumah House",
-      points: 450,
-      position: 1,
-      sports: "Sports: 150 | Culture: 150 | Sanitation: 150",
-    },
-    {
-      house: "Yaa Asantewaa House",
-      points: 420,
-      position: 2,
-      sports: "Sports: 140 | Culture: 140 | Sanitation: 140",
-    },
-    {
-      house: "Osei Tutu House",
-      points: 390,
-      position: 3,
-      sports: "Sports: 130 | Culture: 130 | Sanitation: 130",
-    },
-    {
-      house: "Nana Ama House",
-      points: 360,
-      position: 4,
-      sports: "Sports: 120 | Culture: 120 | Sanitation: 120",
-    },
-  ];
+  // Use houses and competitions from context data
+  const housesData = data?.houses || [];
+  const competitionsData = data?.competitions || [];
 
-  const upcomingEvents = [
-    {
-      event: "Inter-House Football",
-      date: "2025-01-15",
-      category: "Sports",
-      status: "Upcoming",
-    },
-    {
-      event: "Debate Competition",
-      date: "2025-01-20",
-      category: "Culture",
-      status: "Upcoming",
-    },
-    {
-      event: "Sanitation Week",
-      date: "2025-01-20",
-      category: "Culture",
-      status: "Ongoing",
-    },
-  ];
+  // Process house scores from houses data
+  const houseScores = housesData
+    .map((house) => ({
+      house: house.name,
+      points: house.points,
+      position: getPosition(house.points, housesData),
+      sports: `Sports: ${house.competitionScores?.sports || 0} | Culture: ${
+        house.competitionScores?.culture || 0
+      } | Sanitation: ${house.competitionScores?.sanitation || 0}`,
+    }))
+    .sort((a, b) => b.points - a.points);
 
-  const getPositionColor = () => {
-    return "bg-amber-600 text-black";
+  // Process upcoming events from competitions data
+  const upcomingEvents = competitionsData.map((competition) => ({
+    event: competition.name,
+    date: competition.date,
+    category: competition.category,
+    status: getEventStatus(competition.date),
+  }));
+
+  // Helper function to determine position based on points
+  function getPosition(points: number, houses: any[]) {
+    const sortedHouses = [...houses].sort((a, b) => b.points - a.points);
+    return sortedHouses.findIndex((house) => house.points === points) + 1;
+  }
+
+  // Helper function to determine event status
+  function getEventStatus(date: string) {
+    const eventDate = new Date(date);
+    const today = new Date();
+
+    if (eventDate < today) {
+      return "Completed";
+    } else if (eventDate.toDateString() === today.toDateString()) {
+      return "Ongoing";
+    } else {
+      return "Upcoming";
+    }
+  }
+
+  const getPositionColor = (position: number) => {
+    switch (position) {
+      case 1:
+        return "bg-yellow-400 text-black";
+      case 2:
+        return "bg-yellow-400 text-black";
+      case 3:
+        return "bg-yellow-400 text-black";
+      default:
+        return "bg-yellow-400 text-black";
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -143,9 +149,14 @@ const HouseCompetitions: React.FC = () => {
                       className="w-30 border border-gray-300 rounded-lg p-3                     bg-green-50"
                       required
                     >
+                      <option value="">Select Category</option>
                       <option value="Sports">Sports</option>
                       <option value="Culture">Culture</option>
                       <option value="Sanitation">Sanitation</option>
+                      <option value="Quiz">Quiz</option>
+                      <option value="STEM">STEM</option>
+                      <option value="Arts">Arts</option>
+                      <option value="Debate">Debate</option>
                     </select>
                   </div>
                 </div>
@@ -230,14 +241,14 @@ const HouseCompetitions: React.FC = () => {
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-green-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-800 transition-colors"
+            className="bg-green-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-800 transition-colors flex items-center gap-2"
           >
-            {<Plus className="w-4 h-4 inline-block mx-2" />}
+            <Plus className="w-4 h-4" />
             Add Competition
           </button>
         </div>
 
-        {/* Cards Container - Flex on large screens */}
+        {/* Cards Container */}
         <div className="flex flex-col lg:flex-row gap-6">
           {/* House Leaderboard Card */}
           <div className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200">
@@ -256,7 +267,9 @@ const HouseCompetitions: React.FC = () => {
                   >
                     <div className="flex items-center space-x-4">
                       <span
-                        className={`p-3 rounded-full text-lg font-bold ${getPositionColor()}`}
+                        className={`p-3 rounded-full text-lg font-bold ${getPositionColor(
+                          house.position
+                        )}`}
                       >
                         {house.position}
                       </span>
@@ -303,7 +316,17 @@ const HouseCompetitions: React.FC = () => {
                     <p className="text-xl font-medium text-gray-800">
                       {event.date}
                     </p>
-                    <p className="text-sm">{event.status}</p>
+                    <p
+                      className={`text-sm ${
+                        event.status === "Ongoing"
+                          ? "text-green-600"
+                          : event.status === "Upcoming"
+                          ? "text-blue-800"
+                          : "text-green-800"
+                      }`}
+                    >
+                      {event.status}
+                    </p>
                   </div>
                 </div>
               ))}

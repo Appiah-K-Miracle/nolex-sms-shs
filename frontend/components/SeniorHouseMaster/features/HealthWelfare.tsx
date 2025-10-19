@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Plus,
@@ -11,8 +10,12 @@ import {
   ArrowLeft,
   Save,
 } from "lucide-react";
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
+import { useHouses } from "@/hooks/useHouses";
 
 const HealthWelfare: React.FC = () => {
+  const { data } = useSeniorHouseMaster();
+  const houses = useHouses();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [severityFilter, setSeverityFilter] = useState("all");
@@ -49,157 +52,39 @@ const HealthWelfare: React.FC = () => {
     parentContacted: false,
   });
 
-  const healthCases = [
-    {
-      id: "HC001",
-      studentName: "John Smith",
-      studentId: "SHS2025001",
-      grade: "SHS 1",
-      dormitory: "Unity",
-      house: "Unity",
-      condition: "Common Cold",
-      admissionDate: "2024-01-15",
-      admissionTime: "10:30",
-      status: "In Sickbay",
-      severity: "Moderate",
-      actionTaken: "Medication provided",
-      attendingNurse: "Nurse Ama",
-      symptoms: "Runny nose, cough, mild fever",
-      diagnosis: "Viral upper respiratory infection",
-      treatment: "Rest, hydration, paracetamol",
-      temperature: "37.8°C",
-      bloodPressure: "120/80",
-      pulse: "72",
-      respiratoryRate: "16",
-      medicalNotes: "Student responding well to treatment",
-      parentContacted: true,
-    },
-    {
-      id: "HC002",
-      studentName: "Mike Johnson",
-      studentId: "SHS2025002",
-      grade: "SHS 2",
-      dormitory: "Peace",
-      house: "Peace",
-      condition: "Fever",
-      admissionDate: "2024-01-16",
-      admissionTime: "14:15",
-      status: "Medical Leave",
-      severity: "Severe",
-      actionTaken: "Clinic visit scheduled",
-      attendingNurse: "Nurse Kofi",
-      symptoms: "High fever, body aches, fatigue",
-      diagnosis: "Influenza",
-      treatment: "Antiviral medication, rest",
-      temperature: "39.2°C",
-      bloodPressure: "118/78",
-      pulse: "85",
-      respiratoryRate: "18",
-      medicalNotes: "Requires monitoring for complications",
-      parentContacted: true,
-    },
-    {
-      id: "HC003",
-      studentName: "David Brown",
-      studentId: "SHS2025003",
-      grade: "SHS 3",
-      dormitory: "Hope",
-      house: "Hope",
-      condition: "Allergy",
-      admissionDate: "2024-01-14",
-      admissionTime: "09:45",
-      status: "Discharged",
-      severity: "Moderate",
-      actionTaken: "Antihistamines prescribed",
-      attendingNurse: "Nurse Esi",
-      symptoms: "Sneezing, itchy eyes, skin rash",
-      diagnosis: "Seasonal allergies",
-      treatment: "Antihistamines, avoid allergens",
-      temperature: "36.8°C",
-      bloodPressure: "122/82",
-      pulse: "70",
-      respiratoryRate: "15",
-      medicalNotes: "Allergy management plan provided",
-      parentContacted: false,
-    },
-    {
-      id: "HC004",
-      studentName: "James Wilson",
-      studentId: "SHS2025004",
-      grade: "SHS 1",
-      dormitory: "Faith",
-      house: "Faith",
-      condition: "Sports Injury",
-      admissionDate: "2024-01-17",
-      admissionTime: "16:20",
-      status: "In Sickbay",
-      severity: "Severe",
-      actionTaken: "Physiotherapy sessions",
-      attendingNurse: "Nurse Ama",
-      symptoms: "Swollen ankle, pain, limited mobility",
-      diagnosis: "Ankle sprain",
-      treatment: "RICE protocol, pain management",
-      temperature: "36.9°C",
-      bloodPressure: "119/79",
-      pulse: "68",
-      respiratoryRate: "14",
-      medicalNotes: "Follow-up required in 3 days",
-      parentContacted: true,
-    },
-    {
-      id: "HC005",
-      studentName: "Sarah Miller",
-      studentId: "SHS2025005",
-      grade: "SHS 2",
-      dormitory: "Unity",
-      house: "Unity",
-      condition: "Headache",
-      admissionDate: "2024-01-18",
-      admissionTime: "11:30",
-      status: "Discharged",
-      severity: "Moderate",
-      actionTaken: "Rest advised",
-      attendingNurse: "Nurse Kofi",
-      symptoms: "Persistent headache, sensitivity to light",
-      diagnosis: "Tension headache",
-      treatment: "Hydration, rest, pain relief",
-      temperature: "37.1°C",
-      bloodPressure: "121/81",
-      pulse: "74",
-      respiratoryRate: "16",
-      medicalNotes: "Advise to reduce screen time",
-      parentContacted: false,
-    },
-    {
-      id: "HC006",
-      studentName: "Emma Davis",
-      studentId: "SHS2025006",
-      grade: "SHS 3",
-      dormitory: "Peace",
-      house: "Peace",
-      condition: "Fracture",
-      admissionDate: "2024-01-16",
-      admissionTime: "13:45",
-      status: "Medical Leave",
-      severity: "Severe",
-      actionTaken: "Hospital referral",
-      attendingNurse: "Nurse Esi",
-      symptoms: "Severe pain, deformity, swelling",
-      diagnosis: "Fractured wrist",
-      treatment: "Cast immobilization, pain management",
-      temperature: "37.3°C",
-      bloodPressure: "125/83",
-      pulse: "88",
-      respiratoryRate: "17",
-      medicalNotes: "Orthopedic follow-up scheduled",
-      parentContacted: true,
-    },
-  ];
+  // Use healthRecords from context data
+  const healthCasesData = data?.healthRecords || [];
 
-  const houses = ["Unity", "Peace", "Hope", "Faith", "All Houses"];
-  const grades = ["SHS 1", "SHS 2", "SHS 3"];
-  const severityLevels = ["Moderate", "Severe"];
-  const statusOptions = ["In Sickbay", "Medical Leave", "Discharged"];
+  // Get house names from houses data
+  const houseNames = houses.map((house) => house.name);
+
+  // Get unique grades from health records or use default
+  const gradesFromData = [
+    ...new Set(healthCasesData.map((record) => record.grade)),
+  ];
+  const defaultGrades = ["SHS 1", "SHS 2", "SHS 3"];
+  const availableGrades =
+    gradesFromData.length > 0 ? gradesFromData : defaultGrades;
+
+  // Get severity levels from health records or use default
+  const severityLevelsFromData = [
+    ...new Set(healthCasesData.map((record) => record.severity)),
+  ];
+  const defaultSeverityLevels = ["Moderate", "Severe"];
+  const severityLevels =
+    severityLevelsFromData.length > 0
+      ? severityLevelsFromData
+      : defaultSeverityLevels;
+
+  // Get status options from health records or use default
+  const statusOptionsFromData = [
+    ...new Set(healthCasesData.map((record) => record.status)),
+  ];
+  const defaultStatusOptions = ["In Sickbay", "Medical Leave", "Discharged"];
+  const statusOptions =
+    statusOptionsFromData.length > 0
+      ? statusOptionsFromData
+      : defaultStatusOptions;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -225,7 +110,7 @@ const HealthWelfare: React.FC = () => {
     }
   };
 
-  const filteredCases = healthCases.filter((caseItem) => {
+  const filteredCases = healthCasesData.filter((caseItem) => {
     const matchesSearch =
       caseItem.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       caseItem.condition.toLowerCase().includes(searchTerm.toLowerCase());
@@ -240,6 +125,17 @@ const HealthWelfare: React.FC = () => {
   const displayedCases = showAllCards
     ? filteredCases
     : filteredCases.slice(0, 6);
+
+  // Calculate statistics
+  const stats = {
+    inSickbay: healthCasesData.filter(
+      (caseItem) => caseItem.status === "In Sickbay"
+    ).length,
+    medicalLeave: healthCasesData.filter(
+      (caseItem) => caseItem.status === "Medical Leave"
+    ).length,
+    thisWeek: healthCasesData.length,
+  };
 
   // Handler functions
   const handleViewCase = (caseItem: any) => {
@@ -392,7 +288,7 @@ const HealthWelfare: React.FC = () => {
                     required
                   >
                     <option value="">Select House</option>
-                    {houses.map((house) => (
+                    {houseNames.map((house) => (
                       <option key={house} value={house}>
                         {house}
                       </option>
@@ -411,7 +307,7 @@ const HealthWelfare: React.FC = () => {
                     required
                   >
                     <option value="">Select Grade</option>
-                    {grades.map((grade) => (
+                    {availableGrades.map((grade) => (
                       <option key={grade} value={grade}>
                         {grade}
                       </option>
@@ -1053,7 +949,7 @@ const HealthWelfare: React.FC = () => {
                     className="w-full border-0 border-b-2 border-gray-200 px-3 py-3 bg-transparent focus:outline-none focus:border-green-500 transition-all duration-200 appearance-none"
                     required
                   >
-                    {houses.map((house) => (
+                    {houseNames.map((house) => (
                       <option key={house} value={house}>
                         {house}
                       </option>
@@ -1073,7 +969,7 @@ const HealthWelfare: React.FC = () => {
                     className="w-full border-0 border-b-2 border-gray-200 px-3 py-3 bg-transparent focus:outline-none focus:border-green-500 transition-all duration-200 appearance-none"
                     required
                   >
-                    {grades.map((grade) => (
+                    {availableGrades.map((grade) => (
                       <option key={grade} value={grade}>
                         {grade}
                       </option>
@@ -1361,7 +1257,6 @@ const HealthWelfare: React.FC = () => {
   // Main Dashboard View
   return (
     <div className="space-y-6">
-      {/* Header Section with Title, Text, and Add Record Button */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
@@ -1393,7 +1288,9 @@ const HealthWelfare: React.FC = () => {
             </div>
             <div className="ml-3">
               <div className="text-sm text-gray-600">In Sickbay</div>
-              <div className="text-3xl font-bold text-black">8</div>
+              <div className="text-3xl font-bold text-black">
+                {stats.inSickbay}
+              </div>
             </div>
           </div>
         </div>
@@ -1404,7 +1301,9 @@ const HealthWelfare: React.FC = () => {
             </div>
             <div className="ml-3">
               <div className="text-sm text-gray-600">Medical Leave</div>
-              <div className="text-3xl font-bold text-black">3</div>
+              <div className="text-3xl font-bold text-black">
+                {stats.medicalLeave}
+              </div>
             </div>
           </div>
         </div>
@@ -1415,7 +1314,9 @@ const HealthWelfare: React.FC = () => {
             </div>
             <div className="ml-3">
               <div className="text-sm text-gray-600">This Week</div>
-              <div className="text-3xl font-bold text-black">15</div>
+              <div className="text-3xl font-bold text-black">
+                {stats.thisWeek}
+              </div>
             </div>
           </div>
         </div>
@@ -1450,9 +1351,11 @@ const HealthWelfare: React.FC = () => {
                 className="w-full border-0 border-b-2 border-gray-200 px-3 py-3 bg-transparent focus:outline-none focus:border-green-500 transition-all duration-200 appearance-none"
               >
                 <option value="all">All Status</option>
-                <option value="In Sickbay">In Sickbay</option>
-                <option value="Medical Leave">Medical Leave</option>
-                <option value="Discharged">Discharged</option>
+                {statusOptions.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -1466,8 +1369,11 @@ const HealthWelfare: React.FC = () => {
                 className="w-full border-0 border-b-2 border-gray-200 px-3 py-3 bg-transparent focus:outline-none focus:border-green-500 transition-all duration-200 appearance-none"
               >
                 <option value="all">All Severity</option>
-                <option value="Moderate">Moderate</option>
-                <option value="Severe">Severe</option>
+                {severityLevels.map((severity) => (
+                  <option key={severity} value={severity}>
+                    {severity}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

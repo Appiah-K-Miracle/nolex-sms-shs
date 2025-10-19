@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   UsersRound,
@@ -17,112 +16,96 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-const shortcuts = [
-  {
-    title: "1,247",
-    description: "Across all houses",
-    icon: UsersRound,
-    color: "bg-green-100",
-    value: "Total Boarders",
-    analytics: "5.2%",
-    trend: "up",
-  },
-  {
-    title: "94%",
-    description: "1,175 / 1,250 beds occupied",
-    icon: Bed,
-    color: "bg-green-100",
-    value: "Bed Occupancy",
-  },
-  {
-    title: "12",
-    description: "Pending approval",
-    icon: TriangleAlert,
-    color: "bg-red-100",
-    value: "Discipline Cases",
-  },
-  {
-    title: "8",
-    description: "Students currently in sickbay",
-    icon: Heart,
-    color: "bg-green-100",
-    value: "Sickbay Occupancy",
-  },
-  {
-    title: "3",
-    description: "Next 2 weeks",
-    icon: Trophy,
-    color: "bg-green-100",
-    value: "Upcoming Competitions",
-  },
-  {
-    title: "A+",
-    description: "Overall ranking",
-    icon: TrendingUp,
-    color: "bg-green-100",
-    value: "House Performance",
-  },
-];
-
-const houseRankings = [
-  { position: 1, name: "Kwame Nkrumah House", score: 95, icon: Crown },
-  { position: 2, name: "Yaa Asantewaa House", score: 92, icon: Medal },
-  { position: 3, name: "Osei Tutu House", score: 88, icon: Award },
-  { position: 4, name: "Nana Ama House", score: 85, icon: Star },
-];
-
-const disciplineCases = [
-  {
-    name: "Kofi Mensah",
-    house: "Kwame Nkrumah House",
-    date: "2 hours ago",
-    punishment: "Warning",
-    color: "bg-amber-100",
-  },
-  {
-    name: "Ama Serwaa",
-    house: "Yaa Asantewaa House",
-    date: "5 hours ago",
-    punishment: "Suspension",
-    color: "bg-red-100",
-  },
-  {
-    name: "Kwabena Osei",
-    house: "Osei Tutu House",
-    date: "1 day ago",
-    punishment: "Warning",
-    color: "bg-amber-100",
-  },
-  {
-    name: "Esi Boateng",
-    house: "Kwame Nkrumah House",
-    date: "2 days ago",
-    punishment: "Suspension",
-    color: "bg-orange-100",
-  },
-  {
-    name: "Yaw Appiah",
-    house: "Yaa Asantewaa House",
-    date: "3 days ago",
-    punishment: "Warning",
-    color: "bg-amber-100",
-  },
-  {
-    name: "Akua Asare",
-    house: "Osei Tutu House",
-    date: "4 days ago",
-    punishment: "Suspension",
-    color: "bg-red-100",
-  },
-];
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
+import { useDisciplineCases } from "@/hooks/useDiscipline";
+import { useHouses } from "@/hooks/useHouses";
 
 export function DashboardSummary() {
   const [showAllCases, setShowAllCases] = useState(false);
+  const { data } = useSeniorHouseMaster();
+  const disciplineCases = useDisciplineCases();
+  const houses = useHouses();
+
+  // Calculate statistics from centralized data
+  const totalBoarders = data.statistics.totalBoarders;
+  const bedOccupancy = data.statistics.bedOccupancy;
+  const occupiedBeds = Math.round((totalBoarders * bedOccupancy) / 100);
+
+  const activeHealthCases = data.healthRecords.filter(
+    (record) => record.status === "In Sickbay"
+  ).length;
+
+  const shortcuts = [
+    {
+      title: totalBoarders.toLocaleString(),
+      description: "Across all houses",
+      icon: UsersRound,
+      color: "bg-green-100",
+      value: "Total Boarders",
+      analytics: "5.2%",
+      trend: "up",
+    },
+    {
+      title: `${bedOccupancy}%`,
+      description: `${occupiedBeds} / ${totalBoarders} beds occupied`,
+      icon: Bed,
+      color: "bg-green-100",
+      value: "Bed Occupancy",
+    },
+    {
+      title: data.statistics.disciplineCasesCount.toString(),
+      description: "Pending approval",
+      icon: TriangleAlert,
+      color: "bg-red-100",
+      value: "Discipline Cases",
+    },
+    {
+      title: activeHealthCases.toString(),
+      description: "Students currently in sickbay",
+      icon: Heart,
+      color: "bg-green-100",
+      value: "Sickbay Occupancy",
+    },
+    {
+      title: data.statistics.upcomingCompetitions.toString(),
+      description: "Next 2 weeks",
+      icon: Trophy,
+      color: "bg-green-100",
+      value: "Upcoming Competitions",
+    },
+    {
+      title: data.statistics.housePerformance,
+      description: "Overall ranking",
+      icon: TrendingUp,
+      color: "bg-green-100",
+      value: "House Performance",
+    },
+  ];
+
+  // Create house rankings from centralized data
+  const houseRankings = houses
+    .sort((a, b) => b.competitionScores.total - a.competitionScores.total)
+    .map((house, index) => ({
+      position: index + 1,
+      name: house.name,
+      score: house.competitionScores.total,
+      icon: [Crown, Medal, Award, Star][index] || Star,
+    }));
+
+  // Create discipline cases display from centralized data
+  const recentDisciplineCases = disciplineCases
+    .slice(0, 6)
+    .map((caseItem, index) => ({
+      name: caseItem.studentName,
+      house: caseItem.house,
+      date: caseItem.date,
+      punishment: caseItem.severity,
+      color: caseItem.severity === "Suspension" ? "bg-red-100" : "bg-amber-100",
+    }));
 
   const displayedCases = showAllCases
-    ? disciplineCases
-    : disciplineCases.slice(0, 3);
+    ? recentDisciplineCases
+    : recentDisciplineCases.slice(0, 3);
 
   return (
     <section className="bg-[#f8fbf4] rounded-xl p-6">
@@ -236,7 +219,7 @@ export function DashboardSummary() {
           </CardContent>
         </Card>
 
-        {/* Recent Discipline Cases - No Border */}
+        {/* Recent Discipline Cases */}
         <Card className="bg-white shadow-sm hover:shadow-md transition-all border-0">
           <CardContent className="p-6">
             <div className="mb-4">
@@ -291,7 +274,7 @@ export function DashboardSummary() {
               >
                 {showAllCases
                   ? "View Less Cases"
-                  : `View All Cases (${disciplineCases.length})`}
+                  : `View All Cases (${recentDisciplineCases.length})`}
               </Button>
             </div>
           </CardContent>

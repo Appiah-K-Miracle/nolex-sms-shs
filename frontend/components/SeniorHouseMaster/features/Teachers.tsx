@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   Users,
@@ -17,6 +16,8 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTeachers } from "@/hooks/useTeachers";
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
 
 interface Teacher {
   id: number;
@@ -30,138 +31,11 @@ interface Teacher {
   position: string;
   password: string;
 }
-const teacherStats = [
-  {
-    title: "24",
-    description: "Across all houses",
-    icon: Users,
-    value: "Total Teachers",
-  },
-  {
-    title: "6",
-    description: "Leading houses",
-    icon: Building2,
-    value: "House Masters",
-  },
-  {
-    title: "12",
-    description: "Supporting roles",
-    icon: Users,
-    value: "Assistants",
-  },
-  {
-    title: "6",
-    description: "Awaiting assignment",
-    icon: Mail,
-    value: "Unassigned",
-  },
-];
-
-const recentTeachers = [
-  {
-    id: 1,
-    name: "Mr. Kwame Mensah",
-    role: "Mathematics Teacher",
-    email: "kasante@school.edu.gh",
-    phone: "+233 24 123 4567",
-    department: "Mathematics Department",
-    joinDate: "2022-08-15",
-    house: "Kwame Nkrumah House",
-    position: "house master",
-    password: "password123",
-  },
-  {
-    id: 2,
-    name: "Mrs. Abena Osei",
-    role: "Science Teacher",
-    email: "aserwaa@school.edu.gh",
-    phone: "+233 24 234 5678",
-    department: "Science Department",
-    joinDate: "2020-01-10",
-    house: "Yaa Asantewaa House",
-    position: "assistant house master",
-    password: "password123",
-  },
-  {
-    id: 3,
-    name: "Mr. Kofi Asante",
-    role: "English Teacher",
-    email: "dosei@school.edu.gh",
-    phone: "+233 24 345 6789",
-    department: "Languages Department",
-    joinDate: "2021-03-22",
-    house: "Osei Tutu House",
-    position: "teacher",
-    password: "password123",
-  },
-  {
-    id: 4,
-    name: "Mrs. Efua Mensah",
-    role: "History Teacher",
-    email: "emensah@school.edu.gh",
-    phone: "+233 24 456 7890",
-    department: "Humanities Department",
-    joinDate: "2023-01-05",
-    house: "Nana Ama House",
-    position: "teacher",
-    password: "password123",
-  },
-];
-
-const allTeachers = [
-  ...recentTeachers,
-  {
-    id: 5,
-    name: "Dr. Yaw Boateng",
-    email: "yboateng@school.edu.gh",
-    role: "Physics Teacher",
-    phone: "+233 24 567 8901",
-    department: "Science Department",
-    joinDate: "2018-06-10",
-    position: "Physics HOD",
-    house: "Kwame Nkrumah House",
-    password: "password123",
-  },
-  {
-    id: 6,
-    name: "Mrs. Grace Anokye",
-    role: "Chemistry Teacher",
-    email: "ganokye@school.edu.gh",
-    phone: "+233 24 678 9012",
-    department: "Science Department",
-    joinDate: "2019-09-15",
-    house: "Nana Ama House",
-    password: "password123",
-    position: "teacher",
-  },
-  {
-    id: 7,
-    name: "Mr. Samuel Tetteh",
-    role: "PE Instructor",
-    email: "stetteh@school.edu.gh",
-    phone: "+233 24 789 0123",
-    department: "PE Department",
-    joinDate: "2022-11-30",
-    house: "Yaa Asantewaa House",
-    password: "password123",
-    position: "teacher",
-  },
-  {
-    id: 8,
-    name: "Mrs. Abena Owusu",
-    role: "Art Teacher",
-    email: "aowusu@school.edu.gh",
-    contact: " ",
-    phone: "+233 24 890 1234",
-    department: "Creative Arts Department",
-    joinDate: "2021-07-20",
-    house: "Osei Tutu House",
-    password: "password123",
-    position: "teacher",
-  },
-];
 
 export function TeachersManagement() {
+  const teachers = useTeachers();
+  const { addTeacher, updateTeacher } = useSeniorHouseMaster();
+
   const [showAllTeachers, setShowAllTeachers] = useState(false);
   const [currentView, setCurrentView] = useState("dashboard");
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
@@ -183,11 +57,65 @@ export function TeachersManagement() {
     email: "",
   });
 
-  const displayedTeachers = showAllTeachers ? allTeachers : recentTeachers;
+  // Calculate stats dynamically from teachers data
+  const calculatedStats = [
+    {
+      title: teachers.length.toString(),
+      description: "Across all houses",
+      icon: Users,
+      value: "Total Teachers",
+    },
+    {
+      title: teachers
+        .filter(
+          (t) =>
+            t.position.toLowerCase().includes("master") ||
+            t.position.toLowerCase().includes("mistress")
+        )
+        .length.toString(),
+      description: "Leading houses",
+      icon: Building2,
+      value: "House Masters",
+    },
+    {
+      title: teachers
+        .filter((t) => t.position.toLowerCase().includes("assistant"))
+        .length.toString(),
+      description: "Supporting roles",
+      icon: Users,
+      value: "Assistants",
+    },
+    {
+      title: teachers
+        .filter((t) => !t.house || t.house === "")
+        .length.toString(),
+      description: "Awaiting assignment",
+      icon: Mail,
+      value: "Unassigned",
+    },
+  ];
+
+  const displayedTeachers = showAllTeachers ? teachers : teachers.slice(0, 4);
 
   const handleAddTeacher = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Use context to add teacher
+    addTeacher({
+      name: newTeacher.name,
+      role: newTeacher.role,
+      phone: newTeacher.phone,
+      department: newTeacher.department,
+      joinDate: newTeacher.joinDate,
+      house: newTeacher.house,
+      position: newTeacher.position,
+      password: newTeacher.password,
+      email: newTeacher.email,
+    });
+
     console.log("Adding new teacher:", newTeacher);
+
+    // Reset form
     setNewTeacher({
       name: "",
       role: "",
@@ -204,7 +132,10 @@ export function TeachersManagement() {
 
   const handleEditTeacher = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Updating teacher:", selectedTeacher);
+    if (selectedTeacher) {
+      updateTeacher(selectedTeacher.id, selectedTeacher);
+      console.log("Updating teacher:", selectedTeacher);
+    }
     setCurrentView("dashboard");
     setSelectedTeacher(null);
   };
@@ -1184,7 +1115,7 @@ export function TeachersManagement() {
 
       {/* 4 Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        {teacherStats.map((stat, index) => {
+        {calculatedStats.map((stat, index) => {
           return (
             <Card
               key={index}
@@ -1328,7 +1259,7 @@ export function TeachersManagement() {
             >
               {showAllTeachers
                 ? "View Less Teachers"
-                : `View All Teachers (${allTeachers.length})`}
+                : `View All Teachers (${teachers.length})`}
             </Button>
           </div>
         </CardContent>

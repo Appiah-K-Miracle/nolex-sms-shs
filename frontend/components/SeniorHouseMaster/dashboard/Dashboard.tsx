@@ -14,6 +14,7 @@ import HouseCompetitions from "../features/HouseCompetitions";
 import AcademicPerformance from "../features/AcademicPerformance";
 import ReportsExport from "../features/ReportsExport";
 import Communication from "../features/Communication";
+import { SeniorHouseMasterProvider } from "@/contexts/SeniorHouseMasterContext";
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -50,17 +51,17 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar - Always visible on all screen sizes */}
-      <div className="flex-shrink-0">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      </div>
+    <SeniorHouseMasterProvider>
+      <div className="flex min-h-screen bg-gray-50">
+        <div className="flex-shrink-0">
+          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
 
-      {/* Main Content - Scrollable area */}
-      <main className="flex-1 overflow-auto p-4 lg:p-6 min-h-screen">
-        {renderMainContent()}
-      </main>
-    </div>
+        <main className="flex-1 overflow-auto p-4 lg:p-6 min-h-screen">
+          {renderMainContent()}
+        </main>
+      </div>
+    </SeniorHouseMasterProvider>
   );
 };
 

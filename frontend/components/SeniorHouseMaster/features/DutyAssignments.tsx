@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Plus,
@@ -15,10 +14,16 @@ import {
   ClipboardList,
   User,
 } from "lucide-react";
+import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
+import { useHouses } from "@/hooks/useHouses";
+import { useTeachers } from "@/hooks/useTeachers";
 
 const DutyAssignments: React.FC = () => {
+  const { data } = useSeniorHouseMaster();
+  const houses = useHouses();
+  const teachers = useTeachers();
   const [currentView, setCurrentView] = useState("dashboard");
-  const [selectedDuty, setSelectedDuty] = useState<any>(null);
+  const [selectedDuty, setSelectedDuty] = useState<unknown>(null);
   const [showAllDuties, setShowAllDuties] = useState(false);
 
   // Form state for new duty assignment
@@ -32,128 +37,60 @@ const DutyAssignments: React.FC = () => {
     status: "Scheduled",
   });
 
+  // Use dutyAssignments from context data
+  const dutyAssignmentsData = data?.dutyAssignments || [];
+
+  // Get house names from houses data
+  const houseNames = houses.map((house) => house.name);
+
+  // Get staff members from teachers data
+  const staffMembers = teachers.map((teacher) => teacher.name);
+
+  // Calculate stats dynamically from dutyAssignments data
+  const totalDuties = dutyAssignmentsData.length;
+  const activeDuties = dutyAssignmentsData.filter(
+    (duty) => duty.status === "Active"
+  ).length;
+  const pendingDuties = dutyAssignmentsData.filter(
+    (duty) => duty.status === "Pending"
+  ).length;
+  const housesWithAssignments = new Set(
+    dutyAssignmentsData.map((duty) => duty.house)
+  ).size;
+
   const dutyStats = [
     {
       id: 1,
       title: "Total Duties",
-      count: 18,
+      count: totalDuties,
       description: "Across all houses",
       icon: Users,
     },
     {
       id: 2,
       title: "Active",
-      count: 15,
+      count: activeDuties,
       description: "Currently running",
       icon: Calendar,
     },
     {
       id: 3,
       title: "Pending",
-      count: 3,
+      count: pendingDuties,
       description: "Awaiting start",
       icon: Clock,
     },
     {
       id: 4,
       title: "Houses",
-      count: "6",
+      count: housesWithAssignments.toString(),
       description: "With assignments",
       icon: Building2,
     },
   ];
 
-  const dutyRoster = [
-    {
-      id: 1,
-      dutyName: "Cleaning Duty",
-      dutyType: "cleaning",
-      house: "Nkrumah House",
-      days: "Mon, Wed, Fri",
-      time: "7:00 AM - 9:00 AM",
-      assignedTo: "Mr. Kwame Asante",
-      status: "Active",
-    },
-    {
-      id: 2,
-      dutyName: "Dining Hall Service",
-      dutyType: "dining",
-      house: "Yaa Asantewaa House",
-      days: "Daily",
-      time: "12:00 PM - 2:00 PM",
-      assignedTo: "Mrs. Ama Serwaa",
-      status: "Scheduled",
-    },
-    {
-      id: 3,
-      dutyName: "Study Hall Supervision",
-      dutyType: "supervision",
-      house: "Osei Tutu House",
-      days: "Weekdays",
-      time: "4:00 PM - 6:00 PM",
-      assignedTo: "Mr. David Osei",
-      status: "Active",
-    },
-    {
-      id: 4,
-      dutyName: "Facility Maintenance",
-      dutyType: "maintenance",
-      house: "Nana Ama House",
-      days: "Tuesday",
-      time: "10:00 AM - 12:00 PM",
-      assignedTo: "Ms. Efua Mensah",
-      status: "Pending",
-    },
-    {
-      id: 5,
-      dutyName: "Morning Assembly",
-      dutyType: "supervision",
-      house: "All Houses",
-      days: "Daily",
-      time: "7:00 AM - 7:30 AM",
-      assignedTo: "Mrs. Ama Serwaa",
-      status: "Active",
-    },
-    {
-      id: 6,
-      dutyName: "Sports Equipment",
-      dutyType: "maintenance",
-      house: "Sports Complex",
-      days: "Mon, Thu",
-      time: "3:00 PM - 5:00 PM",
-      assignedTo: "Mr. David Osei",
-      status: "Scheduled",
-    },
-    {
-      id: 7,
-      dutyName: "Library Supervision",
-      dutyType: "supervision",
-      house: "Main Library",
-      days: "Weekdays",
-      time: "2:00 PM - 4:00 PM",
-      assignedTo: "Ms. Efua Mensah",
-      status: "Active",
-    },
-  ];
-
-  const houses = [
-    "Nkrumah House",
-    "Yaa Asantewaa House",
-    "Osei Tutu House",
-    "Nana Ama House",
-    "All Houses",
-    "Sports Complex",
-    "Main Library",
-  ];
-
-  const staffMembers = [
-    "Mr. Kwame Asante",
-    "Mrs. Ama Serwaa",
-    "Mr. David Osei",
-    "Ms. Efua Mensah",
-    "Mr. Kofi Mensah",
-    "Mrs. Abena Osei",
-  ];
+  // Use dutyAssignments from context data for duty roster
+  const dutyRoster = dutyAssignmentsData;
 
   // Get displayed duties based on showAllDuties state
   const displayedDuties = showAllDuties ? dutyRoster : dutyRoster.slice(0, 3);
@@ -179,11 +116,6 @@ const DutyAssignments: React.FC = () => {
   const handleEditDuty = (duty: any) => {
     setSelectedDuty(duty);
     setCurrentView("editDuty");
-  };
-
-  const handleReassignDuty = (duty: any) => {
-    setSelectedDuty(duty);
-    setCurrentView("reassignDuty");
   };
 
   const handleAssignDutyClick = () => {
@@ -276,7 +208,7 @@ const DutyAssignments: React.FC = () => {
                     required
                   >
                     <option value="">Select House</option>
-                    {houses.map((house) => (
+                    {houseNames.map((house) => (
                       <option key={house} value={house}>
                         {house}
                       </option>
@@ -603,7 +535,7 @@ const DutyAssignments: React.FC = () => {
                     required
                   >
                     <option value="">Select House</option>
-                    {houses.map((house) => (
+                    {houseNames.map((house) => (
                       <option key={house} value={house}>
                         {house}
                       </option>
