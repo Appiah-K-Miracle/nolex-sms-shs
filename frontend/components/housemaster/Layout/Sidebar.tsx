@@ -1,21 +1,19 @@
 "use client";
 import type React from "react";
 import {
-  LayoutDashboard,
-  Home,
+  House,
   Users,
-  Building,
   Bed,
+  LogOut,
+  Box,
   ClipboardList,
-  Scale,
-  Heart,
-  Trophy,
-  BookOpen,
-  FileText,
   MessageCircle,
   ChevronRight,
-  GraduationCap,
+  ClipboardCheck,
   TriangleAlert,
+  Heart,
+  MessageSquare,
+  Award,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,68 +21,54 @@ interface NavItem {
   title: string;
   id: string;
   icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  badge?: string;
 }
 
 const navigation: NavItem[] = [
   {
     title: "Dashboard",
     id: "dashboard",
-    icon: LayoutDashboard,
+    icon: House,
   },
   {
     title: "House Management",
-    id: "house-management",
-    icon: Home,
-  },
-  {
-    title: "Teachers",
-    id: "teachers",
+    id: "houseManagement",
     icon: Users,
   },
   {
-    title: "Dormitory and Capacity",
-    id: "dormitory-capacity",
-    icon: Building,
+    title: "Roll Call Attendance",
+    id: "roll-call-attendance",
+    icon: ClipboardCheck,
   },
   {
-    title: "Bed Assignments",
-    id: "bed-assignments",
-    icon: Bed,
-  },
-  {
-    title: "Duty Assignments",
-    id: "duty-assignments",
-    icon: ClipboardList,
-  },
-  {
-    title: "Discipline Oversight",
-    id: "discipline-oversight",
+    title: "Discipline & Conduct",
+    id: "discipline-conduct",
     icon: TriangleAlert,
   },
   {
-    title: "Health and Welfare",
-    id: "health-welfare",
+    title: "Welfare & Health",
+    id: "welfare-health",
     icon: Heart,
   },
   {
-    title: "House Competitions",
-    id: "house-competitions",
-    icon: Trophy,
-  },
-  {
-    title: "Academic Performance",
-    id: "academic-performance",
-    icon: BookOpen,
-  },
-  {
-    title: "Reports and Export",
-    id: "reports-export",
-    icon: FileText,
+    title: "Exeat & Visitation",
+    id: "exeat-visitation",
+    icon: LogOut,
   },
   {
     title: "Communication",
     id: "communication",
-    icon: MessageCircle,
+    icon: MessageSquare,
+  },
+  {
+    title: "Rewards & Privileges",
+    id: "rewards-privileges",
+    icon: Award,
+  },
+  {
+    title: "Inventory & Maintenance",
+    id: "inventory-maintenance",
+    icon: Box,
   },
 ];
 
@@ -92,13 +76,19 @@ interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   className?: string;
+  houseName?: string;
 }
 
-export function Sidebar({ activeTab, setActiveTab, className }: SidebarProps) {
+export function Sidebar({
+  activeTab,
+  setActiveTab,
+  className,
+  houseName = "Kwame Nkrumah House",
+}: SidebarProps) {
   return (
     <aside
       className={cn(
-        "w-64 bg-green-950 text-white h-screen sticky top-0 flex-shrink-0",
+        "w-64 bg-green-900 text-white h-screen sticky top-0 flex-shrink-0",
         className
       )}
     >
@@ -106,8 +96,8 @@ export function Sidebar({ activeTab, setActiveTab, className }: SidebarProps) {
         {/* Dashboard Header */}
         <div className="p-6 border-b border-green-700">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-400 flex items-center justify-center">
-              <GraduationCap className="w-6 h-6 text-green-900" />
+            <div className="w-10 h-10 rounded-lg bg-green-800 flex items-center justify-center">
+              <House className="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-white">House Master</h1>
@@ -126,10 +116,10 @@ export function Sidebar({ activeTab, setActiveTab, className }: SidebarProps) {
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={cn(
-                  "w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm transition-all duration-200 text-left group font-bold",
+                  "w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm transition-all duration-200 text-left group font-bold relative",
                   isActive
-                    ? "bg-amber-400 text-black font-medium shadow-sm"
-                    : "text-white hover:bg-green-800"
+                    ? "bg-green-800 text-white font-medium shadow-sm"
+                    : "hover:bg-green-800"
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -139,28 +129,46 @@ export function Sidebar({ activeTab, setActiveTab, className }: SidebarProps) {
                   />
                   <span className="flex-1">{item.title}</span>
                 </div>
-                {isActive && (
-                  <ChevronRight
-                    className="w-4 h-4 flex-shrink-0 text-green-900"
-                    strokeWidth={2.5}
-                  />
-                )}
+
+                <div className="flex items-center gap-1">
+                  {/* Badge for notifications */}
+                  {item.badge && (
+                    <span
+                      className={cn(
+                        "flex items-center justify-center min-w-5 h-5 text-xs rounded-full",
+                        isActive
+                          ? "bg-green-600 text-white"
+                          : "bg-amber-400 text-green-900"
+                      )}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+
+                  {/* Active indicator arrow */}
+                  {isActive && (
+                    <ChevronRight
+                      className="w-4 h-4 flex-shrink-0 text-white ml-1"
+                      strokeWidth={2.5}
+                    />
+                  )}
+                </div>
               </button>
             );
           })}
         </nav>
 
         {/* User Profile */}
-        <div className="p-1 border-t border-green-700 space-y-2 bg-green-900 m-5 rounded-lg">
+        <div className="p-1 border-t border-green-700 space-y-2 bg-green-800 m-5 rounded-lg">
           <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-black text-sm font-bold">
-              SM
+            <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white text-sm font-bold">
+              HM
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-white truncate">
-                Senior Master
+                House Master
               </p>
-              <p className="text-xs text-gray-200 truncate">Administrator</p>
+              <p className="text-xs text-gray-200 truncate">{houseName}</p>
             </div>
           </div>
         </div>
@@ -173,17 +181,17 @@ export function Sidebar({ activeTab, setActiveTab, className }: SidebarProps) {
         }
 
         .overflow-y-auto::-webkit-scrollbar-track {
-          background: #e5e7eb; /* light gray */
+          background: #064e3b; /* green-900 */
           border-radius: 3px;
         }
 
         .overflow-y-auto::-webkit-scrollbar-thumb {
-          background: #9ca3af; /* medium gray */
+          background: #10b981; /* green-500 */
           border-radius: 3px;
         }
 
         .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-          background: #6b7280; /* darker gray on hover */
+          background: #34d399; /* green-400 on hover */
         }
       `}</style>
     </aside>
