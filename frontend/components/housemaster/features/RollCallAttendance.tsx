@@ -13,9 +13,6 @@ import {
   Eye,
   ArrowLeft,
   Save,
-  Users,
-  UserCheck,
-  UserX,
 } from "lucide-react";
 
 export default function RollCallAttendance() {
@@ -153,7 +150,6 @@ export default function RollCallAttendance() {
   };
 
   const handleSaveRollCall = () => {
-    // Convert the attendance records to match your data structure
     const newAttendanceRecords = Object.entries(attendanceRecords).map(
       ([studentId, status]) => {
         const student = data.students.find((s) => s.id === studentId);
@@ -183,9 +179,6 @@ export default function RollCallAttendance() {
       newAttendanceRecords,
     });
 
-    // Here you would call updateStudentStatus to update the context
-    // updateStudentStatus(newAttendanceRecords, rollCallType);
-
     setShowRollCallForm(false);
     setAttendanceRecords({});
     setIsMarkAllActive(false);
@@ -197,7 +190,6 @@ export default function RollCallAttendance() {
     setIsMarkAllActive(false);
   };
 
-  // Get button style based on student status
   const getButtonStyle = (
     studentId: string,
     status: "present" | "absent" | "excused"
@@ -734,7 +726,6 @@ export default function RollCallAttendance() {
   // Main Roll Call Attendance View
   return (
     <div className="space-y-6">
-      {/* Title and Text with Start Roll Call Button */}
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">

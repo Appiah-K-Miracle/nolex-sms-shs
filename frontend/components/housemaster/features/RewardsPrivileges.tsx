@@ -10,7 +10,6 @@ export default function AwardsManagement() {
   const [showGrantAwardForm, setShowGrantAwardForm] = useState(false);
   const [selectedAward, setSelectedAward] = useState<any>(null);
 
-  // Use real data from the data file
   const { studentAwards } = data.awards;
   const { totalAwards, outstandingStudents, recentAwards } = data.statistics;
 
@@ -27,7 +26,6 @@ export default function AwardsManagement() {
   };
 
   const handleSaveAward = () => {
-    // Logic to save the award
     console.log("Saving award...");
     setShowGrantAwardForm(false);
   };

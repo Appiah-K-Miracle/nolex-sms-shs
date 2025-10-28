@@ -4,18 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useHouseMaster } from "@/contexts/HouseMasterContext";
-import {
-  Search,
-  Plus,
-  UserRoundCog,
-  Edit,
-  ArrowLeft,
-  Eye,
-  Calendar,
-  Scale,
-  Stethoscope,
-  Download,
-} from "lucide-react";
+import { Search, Plus, UserRoundCog, Edit, ArrowLeft, Eye } from "lucide-react";
 
 export default function HouseManagement() {
   const { data } = useHouseMaster();
@@ -110,9 +99,9 @@ export default function HouseManagement() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
+
     console.log("Form submitted:", formData);
-    // You would typically make an API call here
+
     setShowForm(false);
     setEditingStudent(null);
   };

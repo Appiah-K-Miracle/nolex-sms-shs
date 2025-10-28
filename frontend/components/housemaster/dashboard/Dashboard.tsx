@@ -12,7 +12,7 @@ import Communication from "../features/Communication";
 import RewardsPrivileges from "../features/RewardsPrivileges";
 import InventoryMaintenance from "../features/InventoryMaintenance";
 import { SeniorHouseMasterProvider } from "@/contexts/SeniorHouseMasterContext";
-import { HouseMasterProvider } from "@/contexts/HouseMasterContext"; // Add this import
+import { HouseMasterProvider } from "@/contexts/HouseMasterContext";
 
 const HouseMasterDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -46,18 +46,16 @@ const HouseMasterDashboard: React.FC = () => {
     <SeniorHouseMasterProvider>
       <HouseMasterProvider>
         {" "}
-        {/* Add HouseMasterProvider here */}
         <div className="flex min-h-screen bg-gray-50">
           <div className="flex-shrink-0">
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           </div>
 
           <main className="flex-1 overflow-auto p-4 lg:p-6 min-h-screen">
-            {renderMainContent(activeTab)} {/* Pass activeTab as parameter */}
+            {renderMainContent(activeTab)}
           </main>
         </div>
       </HouseMasterProvider>{" "}
-      {/* Close HouseMasterProvider */}
     </SeniorHouseMasterProvider>
   );
 };

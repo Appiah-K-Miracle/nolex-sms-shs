@@ -3,23 +3,13 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useHouseMaster } from "@/contexts/HouseMasterContext";
-import {
-  Award,
-  Plus,
-  Trophy,
-  Eye,
-  ArrowLeft,
-  Save,
-  Box,
-  Wrench,
-} from "lucide-react";
+import { Award, Plus, Eye, ArrowLeft, Save, Box, Wrench } from "lucide-react";
 
 export default function InventoryManagement() {
   const { data, updateStudentAwards } = useHouseMaster();
   const [showNewRequestForm, setShowNewRequestForm] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
 
-  // Use real data from the data file - INVENTORY DATA
   const { requests } = data.inventory;
   const { pendingRequests, maintenanceIssues, completedRequests } =
     data.statistics;

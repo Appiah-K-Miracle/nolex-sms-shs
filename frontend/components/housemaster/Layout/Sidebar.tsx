@@ -3,11 +3,8 @@ import type React from "react";
 import {
   House,
   Users,
-  Bed,
   LogOut,
   Box,
-  ClipboardList,
-  MessageCircle,
   ChevronRight,
   ClipboardCheck,
   TriangleAlert,

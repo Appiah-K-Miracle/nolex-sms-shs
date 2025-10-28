@@ -39,15 +39,7 @@ export interface HouseMasterData {
     guardianName?: string;
     guardianPhone?: string;
   }>;
-  disciplineCases: Array<{
-    id: string;
-    studentName: string;
-    studentId: string;
-    date: string;
-    severity: "Warning" | "Detention" | "Suspension";
-    status: "Pending" | "Approved" | "Rejected";
-    description: string;
-  }>;
+
   healthRecords: Array<{
     id: string;
     studentName: string;
@@ -133,6 +125,48 @@ export interface HouseMasterData {
       status: "In Stock" | "Low Stock" | "Out of Stock";
     }>;
   };
+  disciplineCases: {
+    activeCases: Array<{
+      id: string;
+      studentId: string;
+      studentName: string;
+      grade: string;
+      room: string;
+      offense: string;
+      severity: "minor" | "major";
+      date: string;
+      status: "under_review" | "pending" | "escalated" | "resolved";
+      description: string;
+      reportedBy: string;
+    }>;
+    repeatOffenders: Array<{
+      id: string;
+      studentId: string;
+      studentName: string;
+      grade: string;
+      offense: string;
+      severity: "minor" | "major";
+      date: string;
+      status: "resolved";
+      resolution: string;
+      resolvedBy: string;
+    }>;
+    reports: Array<{
+      studentId: string;
+      name: string;
+      grade: string;
+      room: string;
+      totalCases: number;
+      lastCase: string;
+      status: "needs_intervention" | "monitoring";
+    }>;
+    statistics: {
+      activeCases: number;
+      thisWeek: number;
+      minorOffenses: number;
+      majorOffenses: number;
+    };
+  };
 }
 
 export const houseMasterData: HouseMasterData = {
@@ -140,7 +174,7 @@ export const houseMasterData: HouseMasterData = {
   statistics: {
     totalBoarders: 48,
     bedOccupancy: 96,
-    disciplineCasesCount: 3,
+    disciplineCasesCount: 12,
     upcomingCompetitions: 2,
     housePerformance: "1st Place",
     averageAttendance: 95.2,
@@ -355,35 +389,135 @@ export const houseMasterData: HouseMasterData = {
       guardianPhone: "+233 24 654 3210",
     },
   ],
-  disciplineCases: [
-    {
-      id: "DC001",
-      studentName: "Yaw Boateng",
-      studentId: "SHS2024005",
-      date: "2024-01-15",
-      severity: "Detention",
-      status: "Pending",
-      description: "Late for curfew multiple times",
+  disciplineCases: {
+    activeCases: [
+      {
+        id: "DC-001",
+        studentId: "SHS2024005",
+        studentName: "Yaw Boateng",
+        grade: "Form 2A",
+        room: "Room 104",
+        offense: "Late to dormitory",
+        severity: "minor",
+        date: "2024-01-15",
+        status: "under_review",
+        description: "Student arrived 15 minutes after curfew",
+        reportedBy: "Mr. Johnson",
+      },
+      {
+        id: "DC-002",
+        studentId: "SHS2024003",
+        studentName: "Kofi Mensah",
+        grade: "Form 1B",
+        room: "Room 103",
+        offense: "Improper uniform",
+        severity: "minor",
+        date: "2024-01-15",
+        status: "pending",
+        description: "Wearing non-regulation shoes",
+        reportedBy: "Mrs. Davis",
+      },
+      {
+        id: "DC-003",
+        studentId: "SHS2024007",
+        studentName: "Kwabena Owusu",
+        grade: "Form 1A",
+        room: "Room 106",
+        offense: "Disruptive behavior",
+        severity: "major",
+        date: "2024-01-14",
+        status: "escalated",
+        description: "Shouting in hallway after hours",
+        reportedBy: "Mr. Thompson",
+      },
+      {
+        id: "DC-004",
+        studentId: "SHS2024009",
+        studentName: "Nana Kwame",
+        grade: "Form 2C",
+        room: "Room 203",
+        offense: "Room untidy",
+        severity: "minor",
+        date: "2024-01-13",
+        status: "under_review",
+        description: "Failed room inspection - bed not made",
+        reportedBy: "Mrs. Appiah",
+      },
+    ],
+    repeatOffenders: [
+      {
+        id: "DC-005",
+        studentId: "SHS2024002",
+        studentName: "Ama Serwaa",
+        grade: "Form 3A",
+        offense: "Late submission",
+        severity: "minor",
+        date: "2024-01-10",
+        status: "resolved",
+        resolution: "Written warning issued",
+        resolvedBy: "Mr. Wilson",
+      },
+      {
+        id: "DC-006",
+        studentId: "SHS2024006",
+        studentName: "Efia Amponsah",
+        grade: "Form 2B",
+        offense: "Noise disturbance",
+        severity: "minor",
+        date: "2024-01-08",
+        status: "resolved",
+        resolution: "Extra cleaning duty assigned",
+        resolvedBy: "Mrs. Garcia",
+      },
+      {
+        id: "DC-007",
+        studentId: "SHS2024001",
+        studentName: "Kwame Asare",
+        grade: "Form 2A",
+        offense: "Unauthorized electronics",
+        severity: "major",
+        date: "2024-01-05",
+        status: "resolved",
+        resolution: "Device confiscated, parent notified",
+        resolvedBy: "Mr. Wilson",
+      },
+    ],
+    reports: [
+      {
+        studentId: "SHS2024005",
+        name: "Yaw Boateng",
+        grade: "Form 2A",
+        room: "Room 104",
+        totalCases: 3,
+        lastCase: "2024-01-15",
+        status: "needs_intervention",
+      },
+      {
+        studentId: "SHS2024003",
+        name: "Kofi Mensah",
+        grade: "Form 1B",
+        room: "Room 103",
+        totalCases: 2,
+        lastCase: "2024-01-15",
+        status: "monitoring",
+      },
+      {
+        studentId: "SHS2024009",
+        name: "Nana Kwame",
+        grade: "Form 2C",
+        room: "Room 203",
+        totalCases: 4,
+        lastCase: "2024-01-13",
+        status: "needs_intervention",
+      },
+    ],
+    statistics: {
+      activeCases: 12,
+      thisWeek: 8,
+      minorOffenses: 9,
+      majorOffenses: 3,
     },
-    {
-      id: "DC002",
-      studentName: "Kofi Mensah",
-      studentId: "SHS2024003",
-      date: "2024-01-14",
-      severity: "Warning",
-      status: "Approved",
-      description: "Room inspection failed - untidy bed",
-    },
-    {
-      id: "DC003",
-      studentName: "Kwabena Owusu",
-      studentId: "SHS2024007",
-      date: "2024-01-12",
-      severity: "Warning",
-      status: "Approved",
-      description: "Unauthorized use of mobile phone",
-    },
-  ],
+  },
   healthRecords: [
     {
       id: "HR001",
