@@ -1,4 +1,3 @@
-import { DashboardLayout } from "@/components/teacher/dashboard-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -66,131 +65,129 @@ const students = [
 
 export default function ClassRosterPage() {
   return (
-    <DashboardLayout isClassTeacher={true}>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">Class Roster Management</h1>
-            <p className="text-muted-foreground">Manage students in Form 2B</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Add Student
-            </Button>
-            <Button variant="outline">
-              <ArrowRightLeft className="mr-2 h-4 w-4" />
-              Transfer Student
-            </Button>
-          </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Class Roster Management</h1>
+          <p className="text-gray-600">Manage students in Form 2B</p>
         </div>
-
-        <div className="grid gap-4 md:grid-cols-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">38</div>
-              <p className="text-xs text-muted-foreground">Form 2B</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Male Students</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-chart-1">20</div>
-              <p className="text-xs text-muted-foreground">52.6%</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Female Students</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-chart-2">18</div>
-              <p className="text-xs text-muted-foreground">47.4%</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">New This Term</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">2</div>
-              <p className="text-xs text-muted-foreground">Transfers</p>
-            </CardContent>
-          </Card>
+        <div className="flex gap-2">
+          <Button className="bg-green-700 hover:bg-green-800 text-white">
+            <UserPlus className="mr-2 h-4 w-4" />
+            Add Student
+          </Button>
+          <Button className="bg-green-700 hover:bg-green-800 text-white">
+            <ArrowRightLeft className="mr-2 h-4 w-4" />
+            Transfer Student
+          </Button>
         </div>
+      </div>
 
+      <div className="grid gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader>
-            <div className="flex items-center gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input placeholder="Search students..." className="pl-10" />
-              </div>
-              <Button variant="outline">Export List</Button>
-            </div>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-gray-900">Total Students</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Student</TableHead>
-                  <TableHead>Student ID</TableHead>
-                  <TableHead>Gender</TableHead>
-                  <TableHead>Date of Birth</TableHead>
-                  <TableHead>Guardian Phone</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {students.map((student) => (
-                  <TableRow key={student.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={`/.jpg?height=32&width=32&query=${student.name}`} />
-                          <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                            {student.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium">{student.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-mono text-sm">{student.studentId}</TableCell>
-                    <TableCell>{student.gender}</TableCell>
-                    <TableCell>{new Date(student.dateOfBirth).toLocaleDateString()}</TableCell>
-                    <TableCell className="font-mono text-sm">{student.guardianPhone}</TableCell>
-                    <TableCell>
-                      <Badge variant="default">{student.status}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          Edit
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-destructive bg-transparent">
-                          <UserMinus className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="text-2xl font-bold text-green-700">38</div>
+            <p className="text-xs text-gray-600">Form 2B</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-gray-900">Male Students</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">20</div>
+            <p className="text-xs text-gray-600">52.6%</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-gray-900">Female Students</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-pink-600">18</div>
+            <p className="text-xs text-gray-600">47.4%</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-gray-900">New This Term</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-700">2</div>
+            <p className="text-xs text-gray-600">Transfers</p>
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-600" />
+              <Input placeholder="Search students..." className="pl-10" />
+            </div>
+            <Button variant="outline" className="bg-white hover:bg-gray-50 text-green-700">Export List</Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-gray-600">Student</TableHead>
+                <TableHead className="text-gray-600">Student ID</TableHead>
+                <TableHead className="text-gray-600">Gender</TableHead>
+                <TableHead className="text-gray-600">Date of Birth</TableHead>
+                <TableHead className="text-gray-600">Guardian Phone</TableHead>
+                <TableHead className="text-gray-600">Status</TableHead>
+                <TableHead className="text-right text-gray-600">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {students.map((student) => (
+                <TableRow key={student.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={`/.jpg?height=32&width=32&query=${student.name}`} />
+                        <AvatarFallback className="bg-green-700 text-white text-xs">
+                          {student.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="font-medium text-gray-900">{student.name}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-mono text-sm text-gray-900">{student.studentId}</TableCell>
+                  <TableCell className="text-gray-900">{student.gender}</TableCell>
+                  <TableCell className="text-gray-900">{new Date(student.dateOfBirth).toLocaleDateString()}</TableCell>
+                  <TableCell className="font-mono text-sm text-gray-900">{student.guardianPhone}</TableCell>
+                  <TableCell>
+                    <Badge variant="default" className="bg-green-700 text-white">{student.status}</Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" size="sm">
+                        View
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        Edit
+                      </Button>
+                      <Button variant="outline" size="sm" className="text-red-600 bg-white hover:bg-gray-50">
+                        <UserMinus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
