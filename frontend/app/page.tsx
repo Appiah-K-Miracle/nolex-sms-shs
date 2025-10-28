@@ -32,7 +32,7 @@ const roles = [
   },
   {
     title: "Teacher",
-    href: "/teacher/dashboard",
+    href: "/teacher/teaching/dashboard",
     description: "Access class schedules, student information, and manage assignments.",
     icon: "User",
   },

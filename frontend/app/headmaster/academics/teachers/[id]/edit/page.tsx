@@ -189,7 +189,7 @@ export default function EditTeacherPage({
                 <CardHeader>
                   <CardTitle>Employment Information</CardTitle>
                   <CardDescription>
-                    Teacher's employment details
+                    Teacher&apos;s employment details
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -310,10 +310,10 @@ export default function EditTeacherPage({
                         <SelectContent>
                           <SelectItem value="phd">PhD</SelectItem>
                           <SelectItem value="masters">
-                            Master's Degree
+                            Master&apos;s Degree
                           </SelectItem>
                           <SelectItem value="bachelors">
-                            Bachelor's Degree
+                            Bachelor&apos;s Degree
                           </SelectItem>
                           <SelectItem value="diploma">Diploma</SelectItem>
                           <SelectItem value="certificate">
