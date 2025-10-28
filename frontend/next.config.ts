@@ -1,12 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    appDir: true,
-  },
-  output: "standalone",
   // If your Next.js app is deployed to a subdirectory, uncomment and adjust basePath
-  // basePath: '/frontend',
+  output: "standalone",
   webpack(config) {
     config.resolve.alias = {
       ...config.resolve.alias,
