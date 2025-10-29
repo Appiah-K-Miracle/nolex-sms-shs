@@ -54,7 +54,7 @@ export default function AttendancePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">95%</div>
-            <Progress value={95} className="mt-2 h-2" />
+            <Progress value={95} className="mt-2 h-2 " />
             <p className="text-xs text-muted-foreground mt-2">38 of 40 days</p>
           </CardContent>
         </Card>

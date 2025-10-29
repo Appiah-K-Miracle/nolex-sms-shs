@@ -136,7 +136,7 @@ export default function AnnouncementsPage() {
           <div className="grid gap-4 md:grid-cols-2">
             {upcomingEvents.map((event, index) => (
               <div key={index} className="flex items-start gap-4 p-4 rounded-lg border">
-                <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-lg bg-green-700 text-primary-foreground">
                   <span className="text-2xl font-bold">{event.date}</span>
                   <span className="text-xs uppercase">{event.month}</span>
                 </div>

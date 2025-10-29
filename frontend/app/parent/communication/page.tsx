@@ -98,7 +98,7 @@ export default function CommunicationPage() {
               rows={6}
             />
           </div>
-          <Button onClick={handleSendMessage} disabled={!recipient || !message}>
+          <Button onClick={handleSendMessage} disabled={!recipient || !message} className="bg-green-400/90 hover:bg-green-500/90" >
             <Send className="mr-2 h-4 w-4" />
             Send Message
           </Button>

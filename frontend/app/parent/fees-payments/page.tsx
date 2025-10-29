@@ -119,7 +119,7 @@ export default function FeesPage() {
                 Kwame's education. You can pay using Mobile Money or Bank Transfer.
               </p>
               <div className="flex gap-2 mt-3">
-                <Button size="sm" className="bg-primary hover:bg-primary/90">
+                <Button size="sm" className="bg-green-600 hover:bg-green-700">
                   <Smartphone className="mr-2 h-4 w-4" />
                   Pay with Mobile Money
                 </Button>
@@ -247,7 +247,7 @@ export default function FeesPage() {
                 <p className="text-sm text-muted-foreground">
                   Merchant Code: <span className="font-mono">GHS-001234</span>
                 </p>
-                <Button size="sm" className="mt-2">
+                <Button size="sm" className="mt-2 bg-green-600 hover:bg-green-700">
                   Make Payment
                 </Button>
               </div>
