@@ -6,19 +6,20 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Slot } from "@radix-ui/react-slot";
 
-const sidebarVariants = cva(
-  "flex h-full max-h-screen flex-col border-r bg-background",
-  {
-    variants: {
-      variant: {
-        default: "border-gray-200 dark:border-gray-800",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
+type SidebarContextType = { open: boolean; setOpen: (open: boolean) => void }
+
+const SidebarContext = React.createContext<SidebarContextType | undefined>(
+  undefined
 )
+
+export function SidebarProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <SidebarContext.Provider value={{ open, setOpen }}>
+      {children}
+    </SidebarContext.Provider>
+  )
+}
 
 export interface SidebarProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -38,6 +39,20 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
   }
 )
 Sidebar.displayName = "Sidebar"
+
+const sidebarVariants = cva(
+  "flex h-full max-h-screen flex-col border-r bg-background",
+  {
+    variants: {
+      variant: {
+        default: "border-gray-200 dark:border-gray-800",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
 
 const SidebarHeader = React.forwardRef<
   HTMLDivElement,
