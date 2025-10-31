@@ -4,6 +4,8 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/parent/theme-provider";
 import { parentNavigation } from "@/components/parent/app-sidebar";
 import { SidebarLayout } from "@/components/shared/sidebar-layout";
+import { ParentHeader } from "@/components/parent/layout/Header";
+import { StudentSwitcher } from "@/components/parent/layout/StudentSwitcher";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +39,10 @@ export default function ParentLayout({
         />
       </div>
       <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <ParentHeader />
+        <div className="mb-6">
+          <StudentSwitcher />
+        </div>
         {children}
       </div>
     </div>

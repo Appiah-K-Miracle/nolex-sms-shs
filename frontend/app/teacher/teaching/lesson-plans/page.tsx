@@ -106,27 +106,40 @@ export default function LessonPlansPage() {
                     </p>
                   </div>
                 </div>
-                <Badge
-                  variant={
-                    plan.status === "approved"
-                      ? "default"
-                      : plan.status === "pending"
-                        ? "secondary"
-                        : "destructive"
-                  }
-                  className={
-                    plan.status === "approved"
-                      ? "bg-green-700 text-white"
-                      : plan.status === "pending"
-                        ? "bg-yellow-600 text-white"
-                        : "bg-red-600 text-white"
-                  }
-                >
-                  {plan.status === "approved" ? (
-                    <CheckCircle className="mr-1 h-3 w-3" />
-                  ) : ( <Clock className="mr-1 h-3 w-3" />)}
-                  {plan.status}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm">
+                    View
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    Edit
+                  </Button>
+                  {plan.status === "rejected" && (
+                    <Button variant="default" size="sm" className="bg-green-700 hover:bg-green-800 text-white">
+                      Resubmit
+                    </Button>
+                  )}
+                  <Badge
+                    variant={
+                      plan.status === "approved"
+                        ? "default"
+                        : plan.status === "pending"
+                          ? "secondary"
+                          : "destructive"
+                    }
+                    className={
+                      plan.status === "approved"
+                        ? "bg-green-700 text-white"
+                        : plan.status === "pending"
+                          ? "bg-yellow-600 text-white"
+                          : "bg-red-600 text-white"
+                    }
+                  >
+                    {plan.status === "approved" ? (
+                      <CheckCircle className="mr-1 h-3 w-3" />
+                    ) : ( <Clock className="mr-1 h-3 w-3" />)}
+                    {plan.status}
+                  </Badge>
+                </div>
               </div>
             ))}
           </div>
