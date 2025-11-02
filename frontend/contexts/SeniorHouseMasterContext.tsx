@@ -19,8 +19,8 @@ interface SeniorHouseMasterContextType {
   addHealthRecord: (record: Omit<HealthRecord, "id">) => void;
   assignBed: (assignment: Omit<BedAssignment, "id">) => void;
   addTeacher: (teacher: Omit<Teacher, "id">) => void;
-  updateStudent: (studentId: string, updates: Partial<Student>) => void; // Add this
-  addStudent: (student: Omit<Student, "id">) => void; // Add this
+  updateStudent: (studentId: string, updates: Partial<Student>) => void;
+  addStudent: (student: Omit<Student, "id">) => void;
 }
 
 const SeniorHouseMasterContext = createContext<

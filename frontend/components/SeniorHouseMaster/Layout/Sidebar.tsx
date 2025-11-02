@@ -15,6 +15,7 @@ import {
   MessageCircle,
   ChevronRight,
   GraduationCap,
+  TriangleAlert,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -58,7 +59,7 @@ const navigation: NavItem[] = [
   {
     title: "Discipline Oversight",
     id: "discipline-oversight",
-    icon: Scale,
+    icon: TriangleAlert,
   },
   {
     title: "Health and Welfare",

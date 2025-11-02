@@ -1,3 +1,5 @@
-export default function HousemasterDashboard() {
-  return <div>Housemaster Dashboard</div>;
+import Dashboard from "../../../components/housemaster/dashboard/Dashboard";
+
+export default function Home() {
+  return <Dashboard />;
 }
