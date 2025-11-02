@@ -138,6 +138,10 @@ export interface HouseMasterData {
       status: "under_review" | "pending" | "escalated" | "resolved";
       description: string;
       reportedBy: string;
+      punishmentType?: string;
+      duration?: string;
+      punishmentDetails?: string;
+      witnesses?: string;
     }>;
     repeatOffenders: Array<{
       id: string;
@@ -403,6 +407,10 @@ export const houseMasterData: HouseMasterData = {
         status: "under_review",
         description: "Student arrived 15 minutes after curfew",
         reportedBy: "Mr. Johnson",
+        punishmentType: "",
+        duration: "",
+        punishmentDetails: "",
+        witnesses: "",
       },
       {
         id: "DC-002",
@@ -416,6 +424,10 @@ export const houseMasterData: HouseMasterData = {
         status: "pending",
         description: "Wearing non-regulation shoes",
         reportedBy: "Mrs. Davis",
+        punishmentType: "",
+        duration: "",
+        punishmentDetails: "",
+        witnesses: "",
       },
       {
         id: "DC-003",
@@ -429,6 +441,10 @@ export const houseMasterData: HouseMasterData = {
         status: "escalated",
         description: "Shouting in hallway after hours",
         reportedBy: "Mr. Thompson",
+        punishmentType: "Suspension",
+        duration: "3 days",
+        punishmentDetails: "Suspended from attending evening prep.",
+        witnesses: "John Doe, Jane Smith",
       },
       {
         id: "DC-004",
@@ -442,6 +458,10 @@ export const houseMasterData: HouseMasterData = {
         status: "under_review",
         description: "Failed room inspection - bed not made",
         reportedBy: "Mrs. Appiah",
+        punishmentType: "",
+        duration: "",
+        punishmentDetails: "",
+        witnesses: "",
       },
     ],
     repeatOffenders: [

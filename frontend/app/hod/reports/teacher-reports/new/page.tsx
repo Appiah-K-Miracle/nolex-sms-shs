@@ -5,12 +5,12 @@ import Header from '@/components/hod/layout/Header';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import TeacherReportForm from '@/components/hod/teacher-reports/teacher-report-form';
+import TeacherReportForm, { TeacherReportData } from '@/components/hod/teacher-reports/teacher-report-form';
 
 export default function NewTeacherReportPage() {
   const router = useRouter();
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: TeacherReportData) => {
     // Here you would typically send the data to your API
     console.log('Submitting teacher report:', data);
     

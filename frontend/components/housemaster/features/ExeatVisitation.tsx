@@ -146,15 +146,36 @@ const mockExeatData = {
   },
 };
 
+interface ExeatRequest {
+  id: string;
+  studentId: string;
+  studentName: string;
+  reason: string;
+  duration: string;
+  departure: string;
+  return: string;
+  destination: string;
+  transportMode?: string;
+  guardianName?: string;
+  guardianContact?: string;
+  additionalNotes?: string;
+  status: "pending" | "approved" | "declined";
+  submittedDate?: string;
+  studentClass?: string;
+  studentRoom?: string;
+  attendanceRate?: number;
+  approvedDate?: string;
+  approvedBy?: string;
+}
+
 export default function ExeatVisitationControl() {
-  const { data } = useHouseMaster();
   const [activeTab, setActiveTab] = useState("pending");
-  const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  const [selectedRequest, setSelectedRequest] = useState<ExeatRequest | null>(null);
 
   const { pendingRequests, approvedRequests, visitorLogs, statistics } =
     mockExeatData;
 
-  const handleViewDetails = (request: any) => {
+  const handleViewDetails = (request: ExeatRequest) => {
     setSelectedRequest(request);
   };
 
@@ -177,7 +198,7 @@ export default function ExeatVisitationControl() {
     // Implementation for contacting guardian
   };
 
-  const handleViewStudentProfile = (studentId: string) => {
+  const handleViewStudentProfile = (_studentId: string) => {
     console.log("Viewing student profile:", studentId);
     // Implementation for viewing student profile
   };

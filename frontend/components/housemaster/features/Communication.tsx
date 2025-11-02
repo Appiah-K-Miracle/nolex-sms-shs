@@ -90,8 +90,8 @@ export default function Communication() {
   const { data } = useHouseMaster();
   const [activeView, setActiveView] = useState("dashboard");
   const [activeTab, setActiveTab] = useState("broadcasts");
-  const [selectedMessage, setSelectedMessage] = useState<any>(null);
-  const [messageForm, setMessageForm] = useState({
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [messageForm, setMessageForm] = useState<Partial<Message>>({
     recipientType: "student",
     recipientId: "",
     subject: "",
@@ -104,7 +104,7 @@ export default function Communication() {
   const { statistics, broadcastMessages, individualMessages } =
     mockCommunicationData;
 
-  const handleViewMessage = (message: any) => {
+  const handleViewMessage = (message: Message) => {
     setSelectedMessage(message);
     setActiveView("messageDetails");
   };
@@ -150,7 +150,10 @@ export default function Communication() {
     setActiveView("dashboard");
   };
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = <K extends keyof Partial<Message>>(
+    field: K,
+    value: Partial<Message>[K]
+  ) => {
     setMessageForm((prev) => ({
       ...prev,
       [field]: value,

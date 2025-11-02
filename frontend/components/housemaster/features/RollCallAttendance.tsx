@@ -3,6 +3,13 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useHouseMaster } from "@/contexts/HouseMasterContext";
+import type { 
+  AttendanceStatus,
+  SessionType,
+  AttendanceRecord,
+  HistoryRecord,
+  DetailedAttendance
+} from "@/types/attendance";
 import {
   ClipboardCheck,
   Clock,
@@ -16,17 +23,13 @@ import {
 } from "lucide-react";
 
 export default function RollCallAttendance() {
-  const { data, updateStudentStatus } = useHouseMaster();
+  const { data } = useHouseMaster();
   const [activeTab, setActiveTab] = useState("today");
   const [showRollCallForm, setShowRollCallForm] = useState(false);
-  const [rollCallType, setRollCallType] = useState<"morning" | "evening">(
-    "morning"
-  );
-  const [attendanceRecords, setAttendanceRecords] = useState<
-    Record<string, "present" | "absent" | "excused">
-  >({});
+  const [rollCallType, setRollCallType] = useState<SessionType>("morning");
+  const [attendanceRecords, setAttendanceRecords] = useState<Record<string, AttendanceStatus>>({});
   const [isMarkAllActive, setIsMarkAllActive] = useState(false);
-  const [selectedHistoryRecord, setSelectedHistoryRecord] = useState<any>(null);
+  const [selectedHistoryRecord, setSelectedHistoryRecord] = useState<HistoryRecord | null>(null);
 
   // Get data from the data file - properly typed
   const { todayAttendance, history, defaulters } = data.attendance;
@@ -50,7 +53,7 @@ export default function RollCallAttendance() {
 
   const todayStats = calculateTodayStats();
 
-  const getDetailedAttendanceRecords = (date: string) => {
+  const getDetailedAttendanceRecords = (date: string): DetailedAttendance => {
     if (date === new Date().toISOString().split("T")[0]) {
       return {
         morning: {
@@ -66,13 +69,7 @@ export default function RollCallAttendance() {
           excused: 0,
         },
         defaulters: defaulters.length,
-        studentRecords: todayAttendance.map((record) => ({
-          id: record.studentId,
-          name: record.name,
-          room: record.room,
-          morning: record.morning,
-          evening: record.evening,
-        })),
+        studentRecords: todayAttendance,
       };
     }
 
@@ -102,7 +99,7 @@ export default function RollCallAttendance() {
     };
   };
 
-  const handleViewDetails = (record: any) => {
+  const handleViewDetails = (record: HistoryRecord) => {
     setSelectedHistoryRecord(record);
   };
 
@@ -150,7 +147,7 @@ export default function RollCallAttendance() {
   };
 
   const handleSaveRollCall = () => {
-    const newAttendanceRecords = Object.entries(attendanceRecords).map(
+    const newAttendanceRecords: AttendanceRecord[] = Object.entries(attendanceRecords).map(
       ([studentId, status]) => {
         const student = data.students.find((s) => s.id === studentId);
         return {
@@ -312,13 +309,13 @@ export default function RollCallAttendance() {
                     </tr>
                   </thead>
                   <tbody>
-                    {detailedRecord.studentRecords.map((record: any) => (
+                    {detailedRecord.studentRecords.map((record: AttendanceRecord) => (
                       <tr
-                        key={record.id}
+                        key={record.studentId}
                         className="border-b border-gray-100 hover:bg-gray-50"
                       >
                         <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                          {record.id}
+                          {record.studentId}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-900">
                           {record.name}
@@ -454,9 +451,9 @@ export default function RollCallAttendance() {
                 </tr>
               </thead>
               <tbody>
-                {history.map((record, index) => (
+                {history.map((record) => (
                   <tr
-                    key={index}
+                    key={record.date}
                     className="border-b border-gray-100 hover:bg-gray-50"
                   >
                     <td className="py-3 px-4 text-sm font-medium text-gray-900">
@@ -493,7 +490,7 @@ export default function RollCallAttendance() {
       case "defaulters":
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {defaulters.map((defaulter, index) => (
                 <Card key={defaulter.studentId}>
                   <CardContent className="p-6">

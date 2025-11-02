@@ -11,13 +11,13 @@ import {
   Home,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/headmaster/layout/Header";
 import { Sidebar } from "@/components/headmaster/layout/Sidebar";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function ViewStudents({
@@ -99,10 +99,13 @@ export default function ViewStudents({
                   <CardContent className="pt-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-32 h-32 rounded-full bg-muted flex items-center justify-center overflow-hidden">
-                        <img
+                        <Image
                           src={student.photo || "/placeholder.svg"}
                           alt={`${student.firstName} ${student.lastName}`}
+                          width={128}
+                          height={128}
                           className="w-full h-full object-cover"
+                          priority
                         />
                       </div>
                       <div>

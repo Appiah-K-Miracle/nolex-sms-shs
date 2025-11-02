@@ -10,6 +10,28 @@ interface ScoreDistributionProps {
   }[];
 }
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: {
+    payload: {
+      range: string;
+    };
+    value: number;
+  }[];
+  label?: string;
+}
+
+const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 border border-gray-200 shadow-sm rounded-md">
+          <p className="font-medium">{`${payload[0].payload.range}: ${payload[0].value} students`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
 const ScoreDistribution: React.FC<ScoreDistributionProps> = ({ scoreData }) => {
   // Define colors for the bars based on score ranges
   const getBarColor = (range: string) => {
@@ -19,18 +41,6 @@ const ScoreDistribution: React.FC<ScoreDistributionProps> = ({ scoreData }) => {
     if (range === '60-69') return '#eab308'; // yellow-500
     if (range === '50-59') return '#ca8a04'; // yellow-600
     return '#ef4444'; // red-500 (for 0-49)
-  };
-
-  // Custom tooltip to display the count
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-2 border border-gray-200 shadow-sm rounded-md">
-          <p className="font-medium">{`${payload[0].payload.range}: ${payload[0].value} students`}</p>
-        </div>
-      );
-    }
-    return null;
   };
 
   return (

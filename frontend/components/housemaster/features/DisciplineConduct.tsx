@@ -19,11 +19,28 @@ import {
   Bell,
 } from "lucide-react";
 
+interface DisciplineCase {
+  id: string;
+  studentId: string;
+  studentName?: string;
+  name?: string;
+  date: string;
+  offense: string;
+  severity: "minor" | "major" | "critical";
+  description?: string;
+  punishmentType?: string;
+  duration?: string;
+  punishmentDetails?: string;
+  witnesses?: string;
+  status: "under_review" | "pending" | "escalated" | "resolved";
+  reportedBy?: string;
+}
+
 export default function DisciplineCases() {
   const { data } = useHouseMaster();
   const [activeTab, setActiveTab] = useState("active");
   const [showNewCaseForm, setShowNewCaseForm] = useState(false);
-  const [selectedCase, setSelectedCase] = useState<any>(null);
+  const [selectedCase, setSelectedCase] = useState<DisciplineCase | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newCaseData, setNewCaseData] = useState({
     studentId: "",
@@ -40,7 +57,7 @@ export default function DisciplineCases() {
   const { activeCases, repeatOffenders, reports, statistics } =
     data.disciplineCases;
 
-  const handleViewCaseDetails = (caseItem: any) => {
+  const handleViewCaseDetails = (caseItem: DisciplineCase) => {
     setSelectedCase(caseItem);
 
     setNewCaseData({

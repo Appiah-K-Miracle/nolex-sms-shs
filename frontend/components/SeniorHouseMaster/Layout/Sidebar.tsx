@@ -7,7 +7,6 @@ import {
   Building,
   Bed,
   ClipboardList,
-  Scale,
   Heart,
   Trophy,
   BookOpen,

@@ -14,17 +14,21 @@ import {
 } from "lucide-react";
 import { useSeniorHouseMaster } from "@/contexts/SeniorHouseMasterContext";
 import { useHouses } from "@/hooks/useHouses";
+import { BedAssignment, House } from "@/types/seniorHouseMaster";
+import { BedAssignmentForm } from "@/types/forms";
+
+type View = 'dashboard' | 'viewAssignment' | 'editAssignment' | 'assignBed';
 
 const BedAssignments: React.FC = () => {
   const { data } = useSeniorHouseMaster();
   const houses = useHouses();
-  const [currentView, setCurrentView] = useState("dashboard");
-  const [selectedAssignment, setSelectedAssignment] = useState<unknown>(null);
+  const [currentView, setCurrentView] = useState<View>('dashboard');
+  const [selectedAssignment, setSelectedAssignment] = useState<BedAssignment | null>(null);
   const [visibleAssignments, setVisibleAssignments] = useState(6);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
 
   // Form state
-  const [assignForm, setAssignForm] = useState({
+  const [assignForm, setAssignForm] = useState<BedAssignmentForm>({
     studentName: "",
     indexNumber: "",
     house: "",
@@ -37,11 +41,11 @@ const BedAssignments: React.FC = () => {
   const bedAssignmentsData = data?.bedAssignments || [];
 
   // Get house names from houses data
-  const houseNames = houses.map((house) => house.name);
+  const houseNames = houses.map((house: House) => house.name);
 
   // Generate rooms and beds based on house capacity
   const generateRoomsAndBeds = (houseName: string) => {
-    const house = houses.find((h) => h.name === houseName);
+    const house = houses.find((h: House) => h.name === houseName);
     if (!house) return { rooms: [], beds: [] };
 
     // Calculate rooms based on capacity
@@ -122,7 +126,7 @@ const BedAssignments: React.FC = () => {
 
   // Filter assignments
   const filteredAssignments = recentAssignments.filter(
-    (assignment) =>
+    (assignment: BedAssignment) =>
       assignment.bed.toLowerCase().includes(searchTerm.toLowerCase()) ||
       assignment.room.toLowerCase().includes(searchTerm.toLowerCase()) ||
       assignment.house.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -131,12 +135,12 @@ const BedAssignments: React.FC = () => {
 
   const displayedAssignments = filteredAssignments.slice(0, visibleAssignments);
 
-  const handleViewAssignment = (assignment: unknown) => {
+  const handleViewAssignment = (assignment: BedAssignment) => {
     setSelectedAssignment(assignment);
     setCurrentView("viewAssignment");
   };
 
-  const handleEditAssignment = (assignment: unknown) => {
+  const handleEditAssignment = (assignment: BedAssignment) => {
     setSelectedAssignment(assignment);
     setCurrentView("editAssignment");
   };
@@ -179,7 +183,7 @@ const BedAssignments: React.FC = () => {
     setVisibleAssignments((prev) => prev + 6);
   };
 
-  const handleFormChange = (field: string, value: string) => {
+  const handleFormChange = (field: keyof BedAssignmentForm, value: string) => {
     setAssignForm((prev) => ({
       ...prev,
       [field]: value,
@@ -430,7 +434,7 @@ const BedAssignments: React.FC = () => {
                   <select
                     value={selectedAssignment.house}
                     onChange={(e) =>
-                      setSelectedAssignment((prev: any) =>
+                      setSelectedAssignment((prev: BedAssignment | null) =>
                         prev ? { ...prev, house: e.target.value } : null
                       )
                     }
@@ -452,7 +456,7 @@ const BedAssignments: React.FC = () => {
                   <select
                     value={selectedAssignment.room}
                     onChange={(e) =>
-                      setSelectedAssignment((prev: any) =>
+                      setSelectedAssignment((prev: BedAssignment | null) =>
                         prev ? { ...prev, room: e.target.value } : null
                       )
                     }
@@ -474,7 +478,7 @@ const BedAssignments: React.FC = () => {
                   <select
                     value={selectedAssignment.bed}
                     onChange={(e) =>
-                      setSelectedAssignment((prev: any) =>
+                      setSelectedAssignment((prev: BedAssignment | null) =>
                         prev ? { ...prev, bed: e.target.value } : null
                       )
                     }
@@ -496,8 +500,8 @@ const BedAssignments: React.FC = () => {
                   <select
                     value={selectedAssignment.status}
                     onChange={(e) =>
-                      setSelectedAssignment((prev: any) =>
-                        prev ? { ...prev, status: e.target.value } : null
+                      setSelectedAssignment((prev: BedAssignment | null) =>
+                        prev ? { ...prev, status: e.target.value as BedAssignment['status'] } : null
                       )
                     }
                     className="w-full border-0 border-b-2 border-gray-200 px-3 py-3 bg-transparent focus:outline-none focus:border-green-500 transition-all duration-200 appearance-none"
@@ -525,7 +529,7 @@ const BedAssignments: React.FC = () => {
                     type="text"
                     value={selectedAssignment.studentName}
                     onChange={(e) =>
-                      setSelectedAssignment((prev: any) =>
+                      setSelectedAssignment((prev: BedAssignment | null) =>
                         prev ? { ...prev, studentName: e.target.value } : null
                       )
                     }
@@ -541,7 +545,7 @@ const BedAssignments: React.FC = () => {
                     type="text"
                     value={selectedAssignment.indexNumber}
                     onChange={(e) =>
-                      setSelectedAssignment((prev: any) =>
+                      setSelectedAssignment((prev: BedAssignment | null) =>
                         prev ? { ...prev, indexNumber: e.target.value } : null
                       )
                     }
@@ -563,7 +567,7 @@ const BedAssignments: React.FC = () => {
                     type="date"
                     value={selectedAssignment.date}
                     onChange={(e) =>
-                      setSelectedAssignment((prev: any) =>
+                      setSelectedAssignment((prev: BedAssignment | null) =>
                         prev ? { ...prev, date: e.target.value } : null
                       )
                     }
@@ -832,7 +836,7 @@ const BedAssignments: React.FC = () => {
 
         {/* Bed Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {displayedAssignments.map((assignment) => (
+          {displayedAssignments.map((assignment: BedAssignment) => (
             <div
               key={assignment.id}
               className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200"

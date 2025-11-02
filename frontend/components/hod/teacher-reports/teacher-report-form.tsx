@@ -9,22 +9,39 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { User, BookOpen, AlertTriangle, FileText, Plus, X } from 'lucide-react';
 
+export interface FollowUpAction {
+  action: string;
+  dueDate: string;
+}
+
+export interface TeacherReportData {
+  teacherName: string;
+  subject: string;
+  reportTitle: string;
+  reportType: string;
+  priority: string;
+  description: string;
+  details: string[];
+  recommendations: string[];
+  followUpActions: FollowUpAction[];
+}
+
 interface TeacherReportFormProps {
-  onSubmit?: (data: any) => void;
+  onSubmit?: (data: TeacherReportData) => void;
   onCancel?: () => void;
-  initialData?: any;
+  initialData?: TeacherReportData;
 }
 
 export default function TeacherReportForm({ onSubmit, onCancel, initialData }: TeacherReportFormProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<TeacherReportData>({
     teacherName: initialData?.teacherName || '',
     subject: initialData?.subject || '',
     reportTitle: initialData?.reportTitle || '',
     reportType: initialData?.reportType || '',
     priority: initialData?.priority || '',
     description: initialData?.description || '',
-    details: initialData?.details || [''],
-    recommendations: initialData?.recommendations || [''],
+    details: initialData?.details || [],
+    recommendations: initialData?.recommendations || [],
     followUpActions: initialData?.followUpActions || [{ action: '', dueDate: '' }]
   });
 
@@ -35,37 +52,61 @@ export default function TeacherReportForm({ onSubmit, onCancel, initialData }: T
     }));
   };
 
-  const handleArrayChange = (field: string, index: number, value: string) => {
+  const handleArrayChange = (field: keyof Omit<TeacherReportData, 'followUpActions'>, index: number, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field as keyof typeof prev].map((item: any, i: number) => 
-        i === index ? (typeof item === 'string' ? value : { ...item, action: value }) : item
+      [field]: (prev[field] as string[]).map((item: string, i: number) => 
+        i === index ? value : item
       )
     }));
   };
 
-  const handleFollowUpChange = (index: number, field: string, value: string) => {
+  const handleFollowUpChange = (index: number, field: keyof FollowUpAction, value: string) => {
     setFormData(prev => ({
       ...prev,
-      followUpActions: prev.followUpActions.map((item: any, i: number) =>
+      followUpActions: prev.followUpActions.map((item: FollowUpAction, i: number) =>
         i === index ? { ...item, [field]: value } : item
       )
     }));
   };
 
-  const addArrayItem = (field: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: [...prev[field as keyof typeof prev], field === 'followUpActions' ? { action: '', dueDate: '' } : '']
-    }));
-  };
+  function addArrayItem(field: "details" | "recommendations"): void;
+  function addArrayItem(field: "followUpActions"): void;
+  function addArrayItem(field: keyof TeacherReportData): void {
+    setFormData(prev => {
+      if (field === "details" || field === "recommendations") {
+        return {
+          ...prev,
+          [field]: [...prev[field], '']
+        };
+      } else if (field === "followUpActions") {
+        return {
+          ...prev,
+          [field]: [...prev[field], { action: '', dueDate: '' }]
+        };
+      }
+      return prev;
+    });
+  }
 
-  const removeArrayItem = (field: string, index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field as keyof typeof prev].filter((_: any, i: number) => i !== index)
-    }));
-  };
+  function removeArrayItem(field: "details" | "recommendations", index: number): void;
+  function removeArrayItem(field: "followUpActions", index: number): void;
+  function removeArrayItem(field: keyof TeacherReportData, index: number): void {
+    setFormData(prev => {
+      if (field === "details" || field === "recommendations") {
+        return {
+          ...prev,
+          [field]: prev[field].filter((_: string, i: number) => i !== index)
+        };
+      } else if (field === "followUpActions") {
+        return {
+          ...prev,
+          [field]: prev[field].filter((_: FollowUpAction, i: number) => i !== index)
+        };
+      }
+      return prev;
+    });
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -292,7 +333,7 @@ export default function TeacherReportForm({ onSubmit, onCancel, initialData }: T
           <CardTitle>Follow-up Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {formData.followUpActions.map((action: any, index: number) => (
+          {formData.followUpActions.map((action: FollowUpAction, index: number) => (
             <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <Input
                 value={action.action}
