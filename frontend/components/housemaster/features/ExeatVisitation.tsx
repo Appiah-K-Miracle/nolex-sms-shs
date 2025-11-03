@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useHouseMaster } from "@/contexts/HouseMasterContext";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
@@ -18,7 +17,26 @@ import {
   FileText,
 } from "lucide-react";
 
-const mockExeatData = {
+const mockExeatData: {
+  pendingRequests: ExeatRequest[];
+  approvedRequests: ExeatRequest[];
+  visitorLogs: Array<{
+    id: string;
+    visitorName: string;
+    studentId: string;
+    studentName: string;
+    purpose: string;
+    checkIn: string;
+    checkOut: string;
+    status: string;
+  }>;
+  statistics: {
+    pendingRequests: number;
+    approvedThisWeek: number;
+    visitorsToday: number;
+    totalVisitorsMonth: number;
+  };
+} = {
   pendingRequests: [
     {
       id: "EX001",
@@ -33,7 +51,7 @@ const mockExeatData = {
       guardianName: "Yaw Asare",
       guardianContact: "+233 24 765 4321",
       additionalNotes: "Urgent family matter requiring immediate attention",
-      status: "pending",
+      status: "pending" as const,
       submittedDate: "2024-01-24",
       studentClass: "Form 2A",
       studentRoom: "Room 101",
@@ -52,7 +70,7 @@ const mockExeatData = {
       guardianName: "Kwabena Mensah",
       guardianContact: "+233 24 987 6543",
       additionalNotes: "Regular checkup with family doctor",
-      status: "pending",
+      status: "pending" as const,
       submittedDate: "2024-01-24",
       studentClass: "Form 1B",
       studentRoom: "Room 103",
@@ -71,7 +89,7 @@ const mockExeatData = {
       guardianName: "Ama Amponsah",
       guardianContact: "+233 24 210 9876",
       additionalNotes: "Sister's wedding ceremony",
-      status: "pending",
+      status: "pending" as const,
       submittedDate: "2024-01-23",
       studentClass: "Form 2B",
       studentRoom: "Room 105",
@@ -88,7 +106,7 @@ const mockExeatData = {
       departure: "2024-01-20",
       return: "2024-01-22",
       destination: "Kumasi",
-      status: "approved",
+      status: "approved" as const,
       approvedDate: "2024-01-19",
       approvedBy: "Mr. Johnson",
     },
@@ -101,7 +119,7 @@ const mockExeatData = {
       departure: "2024-01-18",
       return: "2024-01-19",
       destination: "Cape Coast",
-      status: "approved",
+      status: "approved" as const,
       approvedDate: "2024-01-17",
       approvedBy: "Mrs. Davis",
     },
@@ -198,7 +216,7 @@ export default function ExeatVisitationControl() {
     // Implementation for contacting guardian
   };
 
-  const handleViewStudentProfile = (_studentId: string) => {
+  const handleViewStudentProfile = (studentId: string) => {
     console.log("Viewing student profile:", studentId);
     // Implementation for viewing student profile
   };
@@ -475,10 +493,11 @@ export default function ExeatVisitationControl() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button
                 onClick={() =>
-                  handleContactGuardian(selectedRequest.guardianContact)
+                  selectedRequest.guardianContact && handleContactGuardian(selectedRequest.guardianContact)
                 }
                 variant="outline"
                 className="flex items-center justify-center space-x-2 py-4"
+                disabled={!selectedRequest.guardianContact}
               >
                 <Phone className="h-4 w-4" />
                 <span>Contact Guardian</span>

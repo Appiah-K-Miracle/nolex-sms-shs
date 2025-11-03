@@ -4,10 +4,59 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useHouseMaster } from "@/contexts/HouseMasterContext";
 import { Badge } from "@/components/ui/badge";
+
+interface Message {
+  id: string;
+  recipientId: string;
+  recipientName: string;
+  recipientType: string;
+  subject: string;
+  message: string;
+  sentDate: string;
+  status: "sent" | "delivered" | "read" | "failed";
+  sentBy: string;
+  deliveryMethod: string;
+}
+
+interface MessageForm {
+  recipientType: 'student' | 'guardian';
+  recipientId: string;
+  recipientName?: string;
+  subject: string;
+  message: string;
+  sendImmediately: boolean;
+  sendSMS: boolean;
+  sendEmail: boolean;
+  status?: 'sent' | 'delivered' | 'read' | 'failed';
+  sentDate?: string;
+  sentBy?: string;
+  deliveryMethod?: string;
+}
+interface BroadcastMessage {
+  id: string;
+  title: string;
+  message: string;
+  status: "sent" | "delivered" | "read" | "failed";
+  recipients: string;
+  date: string;
+}
+
+interface CommunicationData {
+  statistics: CommunicationStats;
+  broadcastMessages: BroadcastMessage[];
+  individualMessages: Message[];
+}
+
+interface CommunicationStats {
+  totalMessages: number;
+  broadcasts: number;
+  individual: number;
+  sentToday: number;
+}
 import { ArrowLeft, Eye, Send, MessageSquare, Users, User } from "lucide-react";
 
 // Mock data for communications
-const mockCommunicationData = {
+const mockCommunicationData: CommunicationData = {
   statistics: {
     totalMessages: 156,
     broadcasts: 12,
@@ -91,7 +140,7 @@ export default function Communication() {
   const [activeView, setActiveView] = useState("dashboard");
   const [activeTab, setActiveTab] = useState("broadcasts");
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [messageForm, setMessageForm] = useState<Partial<Message>>({
+  const [messageForm, setMessageForm] = useState<MessageForm>({
     recipientType: "student",
     recipientId: "",
     subject: "",
@@ -150,9 +199,9 @@ export default function Communication() {
     setActiveView("dashboard");
   };
 
-  const handleInputChange = <K extends keyof Partial<Message>>(
+  const handleInputChange = <K extends keyof MessageForm>(
     field: K,
-    value: Partial<Message>[K]
+    value: MessageForm[K]
   ) => {
     setMessageForm((prev) => ({
       ...prev,
@@ -160,7 +209,7 @@ export default function Communication() {
     }));
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: Message['status']) => {
     const styles = {
       sent: "bg-blue-100 text-blue-800",
       delivered: "bg-green-100 text-green-800",
@@ -373,7 +422,7 @@ export default function Communication() {
                       value="student"
                       checked={messageForm.recipientType === "student"}
                       onChange={(e) =>
-                        handleInputChange("recipientType", e.target.value)
+                        handleInputChange("recipientType", e.target.value as 'student' | 'guardian')
                       }
                       className="h-4 w-4 text-green-800 focus:ring-green-800"
                     />
@@ -386,7 +435,7 @@ export default function Communication() {
                       value="guardian"
                       checked={messageForm.recipientType === "guardian"}
                       onChange={(e) =>
-                        handleInputChange("recipientType", e.target.value)
+                        handleInputChange("recipientType", e.target.value as 'student' | 'guardian')
                       }
                       className="h-4 w-4 text-green-800 focus:ring-green-800"
                     />
@@ -535,7 +584,7 @@ export default function Communication() {
             <h1 className="text-3xl font-bold text-gray-900">
               Message Details
             </h1>
-            <p className="text-gray-600">Message {selectedMessage.id}</p>
+            <p className="text-gray-600">Message {selectedMessage?.id}</p>
           </div>
         </div>
 
@@ -546,11 +595,11 @@ export default function Communication() {
               {/* Subject and Recipient */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {selectedMessage.subject}
+                  {selectedMessage?.subject}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  TO: {selectedMessage.recipientName} (
-                  {selectedMessage.recipientType})
+                  TO: {selectedMessage?.recipientName} (
+                  {selectedMessage?.recipientType})
                 </p>
               </div>
 
@@ -562,7 +611,7 @@ export default function Communication() {
                 <Card className="bg-gray-50 border-gray-200">
                   <CardContent className="p-4">
                     <p className="text-gray-700 whitespace-pre-wrap">
-                      {selectedMessage.message}
+                      {selectedMessage?.message}
                     </p>
                   </CardContent>
                 </Card>
@@ -578,25 +627,25 @@ export default function Communication() {
                     <div className="flex justify-between">
                       <span className="text-gray-600">Sent Date:</span>
                       <span className="font-medium text-gray-900">
-                        {selectedMessage.sentDate}
+                        {selectedMessage?.sentDate}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Sent By:</span>
                       <span className="font-medium text-gray-900">
-                        {selectedMessage.sentBy}
+                        {selectedMessage?.sentBy}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Delivery Method:</span>
                       <span className="font-medium text-gray-900">
-                        {selectedMessage.deliveryMethod}
+                        {selectedMessage?.deliveryMethod}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Student ID:</span>
                       <span className="font-medium text-gray-900">
-                        {selectedMessage.recipientId}
+                        {selectedMessage?.recipientId}
                       </span>
                     </div>
                   </div>
@@ -605,7 +654,7 @@ export default function Communication() {
                 <div>
                   <h4 className="font-medium text-gray-900 mb-3">Status</h4>
                   <div className="flex items-center space-x-2">
-                    {getStatusBadge(selectedMessage.status)}
+                    {selectedMessage?.status && getStatusBadge(selectedMessage.status)}
                   </div>
                 </div>
               </div>

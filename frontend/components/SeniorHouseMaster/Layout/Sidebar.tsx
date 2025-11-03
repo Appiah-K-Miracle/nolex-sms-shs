@@ -13,7 +13,6 @@ import {
   FileText,
   MessageCircle,
   ChevronRight,
-  GraduationCap,
   TriangleAlert,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -105,9 +104,6 @@ export function Sidebar({ activeTab, setActiveTab, className }: SidebarProps) {
         {/* Dashboard Header */}
         <div className="p-6 border-b border-green-700">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-400 flex items-center justify-center">
-              <GraduationCap className="w-6 h-6 text-green-900" />
-            </div>
             <div>
               <h1 className="text-lg font-bold text-white">House Master</h1>
               <p className="text-xs text-gray-200">Dashboard</p>

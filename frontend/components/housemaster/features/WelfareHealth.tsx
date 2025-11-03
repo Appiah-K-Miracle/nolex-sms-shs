@@ -9,7 +9,6 @@ import {
   Eye,
   ArrowLeft,
   Save,
-  User,
   XCircle,
   Edit,
   Heart,
@@ -19,6 +18,27 @@ import {
   Calendar,
   Stethoscope,
 } from "lucide-react";
+
+interface HealthRecord {
+  id: string;
+  studentName: string;
+  studentId: string;
+  date: string;
+  condition: string;
+  status: "In Sickbay" | "Recovered" | "Monitoring";
+  severity: "mild" | "moderate" | "severe";
+  symptoms: string;
+  temperature: string;
+  referredTo: string;
+  additionalNotes: string;
+  guardianNotified: boolean;
+  referredBy: string;
+  recoveryProgress: {
+    daysUnderCare: number;
+    followUpVisits: number;
+    medicationGiven: string;
+  };
+}
 
 const mockHealthData = {
   healthRecords: [
@@ -136,7 +156,7 @@ export default function HealthAndWelfare() {
   const { data } = useHouseMaster();
   const [activeTab, setActiveTab] = useState("active");
   const [showNewReferralForm, setShowNewReferralForm] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<any>(null);
+  const [selectedRecord, setSelectedRecord] = useState<HealthRecord | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
   const { healthRecords, statistics } = mockHealthData;
@@ -162,7 +182,7 @@ export default function HealthAndWelfare() {
     guardianNotified: false,
   });
 
-  const handleViewRecordDetails = (record: any) => {
+  const handleViewRecordDetails = (record: HealthRecord) => {
     setSelectedRecord(record);
     setIsEditing(false);
   };
@@ -216,7 +236,10 @@ export default function HealthAndWelfare() {
     });
   };
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (
+    field: string,
+    value: string | boolean | number
+  ) => {
     setNewReferralData((prev) => ({
       ...prev,
       [field]: value,
@@ -503,9 +526,9 @@ export default function HealthAndWelfare() {
 
   // Health Record Details View
   if (selectedRecord && !isEditing) {
-    const student = data.students.find(
-      (s) => s.id === selectedRecord.studentId
-    );
+    // const student = data.students.find(
+    //   (s) => s.id === selectedRecord.studentId
+    // );
 
     return (
       <div className="space-y-6">

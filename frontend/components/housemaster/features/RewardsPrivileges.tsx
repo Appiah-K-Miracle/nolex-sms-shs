@@ -4,11 +4,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useHouseMaster } from "@/contexts/HouseMasterContext";
 import { Award, Plus, Trophy, Eye, ArrowLeft, Save } from "lucide-react";
-
+interface StudentAward {
+  id: string;
+  studentName: string;
+  studentId: string;
+  awardType: string;
+  date: string;
+  description: string;
+  points: number;
+}
 export default function AwardsManagement() {
-  const { data, updateStudentAwards } = useHouseMaster();
+  const { data } = useHouseMaster();
   const [showGrantAwardForm, setShowGrantAwardForm] = useState(false);
-  const [selectedAward, setSelectedAward] = useState<any>(null);
+  const [selectedAward, setSelectedAward] = useState<StudentAward | null>(null);
 
   const { studentAwards } = data.awards;
   const { totalAwards, outstandingStudents, recentAwards } = data.statistics;
@@ -17,7 +25,7 @@ export default function AwardsManagement() {
     setShowGrantAwardForm(true);
   };
 
-  const handleViewAwardDetails = (award: any) => {
+  const handleViewAwardDetails = (award: StudentAward) => {
     setSelectedAward(award);
   };
 

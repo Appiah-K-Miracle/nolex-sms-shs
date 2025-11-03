@@ -2,13 +2,26 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useHouseMaster } from "@/contexts/HouseMasterContext";
 import { Award, Plus, Eye, ArrowLeft, Save, Box, Wrench } from "lucide-react";
 
+interface InventoryRequest {
+  id: string;
+  studentName: string;
+  studentId: string;
+  requestType: "supply" | "maintenance";
+  category: string;
+  description: string;
+  date: string;
+  status: "Pending" | "Approved" | "Rejected" | "Completed";
+  priority: "Low" | "Medium" | "High";
+  room?: string;
+}
+
 export default function InventoryManagement() {
-  const { data, updateStudentAwards } = useHouseMaster();
+  const { data } = useHouseMaster();
   const [showNewRequestForm, setShowNewRequestForm] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  const [selectedRequest, setSelectedRequest] =
+    useState<InventoryRequest | null>(null);
 
   const { requests } = data.inventory;
   const { pendingRequests, maintenanceIssues, completedRequests } =
@@ -18,7 +31,7 @@ export default function InventoryManagement() {
     setShowNewRequestForm(true);
   };
 
-  const handleViewRequestDetails = (request: any) => {
+  const handleViewRequestDetails = (request: InventoryRequest) => {
     setSelectedRequest(request);
   };
 
