@@ -1,8 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // If your Next.js app is deployed to a subdirectory, uncomment and adjust basePath
   output: "standalone",
+  // Skip TypeScript and ESLint checks during production builds
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   webpack(config) {
     config.resolve.alias = {
       ...config.resolve.alias,

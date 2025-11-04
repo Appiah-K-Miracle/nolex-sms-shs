@@ -253,7 +253,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-orange-600" />
-                  <span className="text-sm">Uncle (Father's Brother)</span>
+                  <span className="text-sm">Uncle (Father&apos;s Brother)</span>
                 </div>
               </div>
             </div>

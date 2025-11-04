@@ -136,7 +136,7 @@ export default function AssignmentsPage() {
                     </div>
                     <CardTitle className="text-xl">History Essay</CardTitle>
                     <CardDescription className="mt-2">
-                      Write a 1500-word essay on "The Independence Movement in Ghana and its Key Figures"
+                      Write a 1500-word essay on &quot;The Independence Movement in Ghana and its Key Figures&quot;
                     </CardDescription>
                   </div>
                   <FileText className="h-6 w-6 text-primary shrink-0" />
@@ -265,7 +265,7 @@ export default function AssignmentsPage() {
                     </div>
                     <CardTitle className="text-xl">Literature Analysis</CardTitle>
                     <CardDescription className="mt-2">
-                      Character analysis of "Things Fall Apart" by Chinua Achebe
+                      Character analysis of &quot;Things Fall Apart&quot; by Chinua Achebe
                     </CardDescription>
                   </div>
                 </div>

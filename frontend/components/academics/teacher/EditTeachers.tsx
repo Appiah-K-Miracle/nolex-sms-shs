@@ -310,10 +310,10 @@ export default function EditTeacher({
                         <SelectContent>
                           <SelectItem value="phd">PhD</SelectItem>
                           <SelectItem value="masters">
-                            Master's Degree
+                            Master&apos;s Degree
                           </SelectItem>
                           <SelectItem value="bachelors">
-                            Bachelor's Degree
+                            Bachelor&apos;s Degree
                           </SelectItem>
                           <SelectItem value="diploma">Diploma</SelectItem>
                           <SelectItem value="certificate">

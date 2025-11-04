@@ -24,7 +24,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h1 className="text-3xl font-bold text-balance">Welcome Back, Kwame!</h1>
-              <p className="text-muted-foreground mt-1">Here's what's happening with your academics today</p>
+              <p className="text-muted-foreground mt-1">Here&apos;s what&apos;s happening with your academics today</p>
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
@@ -111,7 +111,7 @@ export default function DashboardPage() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Clock className="h-5 w-5 text-primary" />
-                      Today's Schedule
+                      Today&apos;s Schedule
                     </CardTitle>
                     <CardDescription>Wednesday, March 15, 2024</CardDescription>
                   </div>
